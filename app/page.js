@@ -2,7 +2,9 @@ import HomePage from "./home/page";
 
 function Home() {
   return (
-  <HomePage />
+  <>
+    <HomePage />
+  </>
 );
 }
 export default Home;
