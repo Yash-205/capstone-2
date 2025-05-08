@@ -15,13 +15,15 @@ const HomePage = () => {
   const [foodID, setFoodID] = useState("");
   const [query, setQuery] = useState(false);
 
-  async function demo() {
+
+
+  useEffect(() => {
+    
+    async function demo() {
     const res = await fetch(`${URL}?query=${query}&apiKey=${API_Key}`);
     const data = await res.json();
     setFoodData(data.results);
   }
-
-  useEffect(() => {
     if (query) {
       demo();
     }
@@ -36,7 +38,7 @@ const HomePage = () => {
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.06), rgba(255,255,255,0.06)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+
           backgroundRepeat: "no-repeat",
         }}
       >

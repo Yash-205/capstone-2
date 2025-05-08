@@ -9,6 +9,9 @@ const FoodDetail = ({ foodID }) => {
     const url = `https://api.spoonacular.com/recipes/${foodID}/information`;
     const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
 
+
+    useEffect(() => {
+        
     async function fetchRecipe() {
         try {
             const res = await fetch(`${url}?apiKey=${API_Key}`);
@@ -28,11 +31,13 @@ const FoodDetail = ({ foodID }) => {
         }
     }
 
-    useEffect(() => {
+
+
+
         if (foodID) {
             fetchRecipe();
         }
-    }, [foodID]);
+    }, [foodID,url]);
 
     if (error) {
         return <div className="text-red-600 text-center">{error}</div>;
