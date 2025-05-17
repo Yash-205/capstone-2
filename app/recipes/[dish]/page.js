@@ -2,10 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import FoodList from "../../home/FoodList";
-import FoodDetail from "../../home/FoodDetail";
-import Footer from "../../components/footer";
-import Header from "../../components/header";
+import FoodList from "../../components/FoodList";
+import FoodDetail from "../../components/FoodDetail";
 
 const URL = "https://api.spoonacular.com/recipes/complexSearch";
 const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
@@ -13,7 +11,6 @@ const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
 const DishPage = () => {
   const params = useParams();
   const dish = decodeURIComponent(params.dish);
-
   const [foodData, setFoodData] = useState([]);
   const [foodID, setFoodID] = useState("");
 
@@ -28,7 +25,7 @@ const DishPage = () => {
       }
     };
 
-    if (dish) fetchData();
+    // if (dish) fetchData();
   }, [dish]);
 
   return (
