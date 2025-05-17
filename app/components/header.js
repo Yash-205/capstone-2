@@ -13,12 +13,12 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = ['Home', 'Blog', 'About', 'Contact'];
+  const navLinks = ['home','random', 'blog', 'about'];
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-100 ${
           scrolled ? 'bg-amber-400 shadow-md' : 'bg-transparent'
         }`}
       >
@@ -26,14 +26,12 @@ const Header = () => {
           <h1 className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-600 transition-all transform hover:scale-105">
             NutriPlated
           </h1>
-
-          {/* Desktop Nav */}
           <nav className="hidden lg:flex space-x-6">
             {navLinks.map((text) => (
               <Link
                 key={text}
-                href={text === 'Home' ? '/' : `/${text.toLowerCase()}`}
-                className="text-white transition-all duration-200 hover:text-amber-500 hover:scale-125 font-medium"
+                href={text === 'home' ? '/' : `/${text}`}
+                className="text-white transition-all duration-100 hover:text-amber-500 hover:scale-125 font-medium"
               >
                 {text}
               </Link>
@@ -50,10 +48,9 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Mobile Dropdown - Conditionally styled */}
       {isOpen && (
         <div
-          className={`lg:hidden fixed top-[72px] left-0 w-full z-40 px-6 pb-4 pt-4 transition-all duration-300 ${
+          className={`lg:hidden fixed top-[72px] left-0 w-full z-40 px-6 pb-4 pt-4 transition-all duration-100 ${
             scrolled ? 'bg-amber-400' : 'bg-transparent'
           }`}
         >
@@ -63,7 +60,7 @@ const Header = () => {
                 <Link
                   href={text === 'Home' ? '/' : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className="block text-white text-lg font-medium transition-all hover:text-amber-700"
+                  className="block text-white text-lg font-medium transition-all hover:text-amber-500 transition-all transform hover:scale-105"
                 >
                   {text}
                 </Link>

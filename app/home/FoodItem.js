@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { Search } from "lucide-react";
 
 const FoodItem = ({ food, setFoodID }) => {
   return (
@@ -13,7 +12,7 @@ const FoodItem = ({ food, setFoodID }) => {
       />
       <h1 className="text-xl font-semibold text-amber-800 mb-2">{food.title}</h1>
       <button
-        onClick={() => setFoodID(food.id)}
+        onClick={() => setFoodID(food.id)} // works as scrollToDetail
         className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
       >
         View Recipe

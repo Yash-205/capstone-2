@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image'; // Import the Next.js Image component
+import Image from 'next/image';
 
 const FoodDetail = ({ foodID }) => {
     const [food, setFood] = useState({});
@@ -9,42 +9,32 @@ const FoodDetail = ({ foodID }) => {
     const url = `https://api.spoonacular.com/recipes/${foodID}/information`;
     const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
 
-
     useEffect(() => {
-        
-    async function fetchRecipe() {
-        try {
-            const res = await fetch(`${url}?apiKey=${API_Key}`);
-            
-            if (!res.ok) {
-                throw new Error('Failed to fetch data');
+        async function fetchRecipe() {
+            try {
+                const res = await fetch(`${url}?apiKey=${API_Key}`);
+                if (!res.ok) throw new Error('Failed to fetch data');
+                const data = await res.json();
+                setFood(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error(error);
+                setError("Failed to load recipe details.");
+                setIsLoading(false);
             }
-
-            const data = await res.json();
-            console.log(data); // Log the response to see if it's being fetched properly
-            setFood(data);
-            setIsLoading(false);
-        } catch (error) {
-            console.error(error);
-            setError("Failed to load recipe details.");
-            setIsLoading(false);
         }
-    }
-
-
-
 
         if (foodID) {
             fetchRecipe();
         }
-    }, [foodID,url]);
+    }, [foodID, url]);
 
     if (error) {
         return <div className="text-red-600 text-center">{error}</div>;
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+        <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg pb-4">
             {foodID && (
                 <div className="space-y-6">
                     <h1 className="text-3xl font-bold text-center text-gray-800">{food.title}</h1>
@@ -60,7 +50,8 @@ const FoodDetail = ({ foodID }) => {
                         />
                     </div>
 
-                    <div className="flex justify-between items-center text-sm text-gray-600">
+                    {/* Meta Info */}
+                    <div className="flex justify-between flex-wrap gap-2 items-center text-sm text-gray-600">
                         <span className="flex items-center">
                             🧑‍🍳 <strong className="ml-1">{food.readyInMinutes} Minutes</strong>
                         </span>
@@ -70,16 +61,45 @@ const FoodDetail = ({ foodID }) => {
                         <span className="flex items-center">
                             {food.vegetarian ? "🥗 Vegetarian" : "🍗 Non-Vegetarian"}
                         </span>
-                        <span className="flex items-center">
-                            {food.vegan ? "🐮 Vegan" : ""}
-                        </span>
+                        {food.vegan && (
+                            <span className="flex items-center">
+                                🌱 Vegan
+                            </span>
+                        )}
                     </div>
 
+                    {/* Price */}
                     <div className="text-lg text-gray-800">
-                        <span className="font-semibold">Price:</span> 
+                        <span className="font-semibold">Price:</span>{" "}
                         {food.pricePerServing ? `$${(food.pricePerServing / 100).toFixed(2)} Per Serving` : "N/A"}
                     </div>
 
+                    {/* Ingredients Section */}
+                    <div className="bg-amber-50 p-6 rounded-xl shadow-inner">
+                        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Ingredients</h2>
+                        {isLoading ? (
+                            <p className="text-center text-gray-500">Loading...</p>
+                        ) : (
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {food.extendedIngredients?.map((item) => (
+                                    <div key={item.id} className="bg-white rounded-lg p-4 shadow-sm flex flex-col items-center text-center">
+                                        <Image
+                                            src={`https://spoonacular.com/cdn/ingredients_100x100/${item.image}`}
+                                            alt={item.name}
+                                            width={80}
+                                            height={80}
+                                            className="object-contain mb-2 rounded"
+                                            />
+
+                                        <h3 className="font-medium text-gray-700">{item.name}</h3>
+                                        <p className="text-sm text-gray-500">{item.amount} {item.unit}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Instructions */}
                     <div className="mt-6">
                         <h2 className="text-2xl font-semibold text-gray-800">Instructions</h2>
                         <div className="mt-3 space-y-2">

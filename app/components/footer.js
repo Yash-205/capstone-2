@@ -16,8 +16,8 @@ const Footer = () => {
         <ul className="space-y-1">
           <li><Link href="/about" className="hover:underline">About Us</Link></li>
           <li><Link href="/blog" className="hover:underline">Blog</Link></li>
-          <li><Link href="/contact" className="hover:underline">Contact</Link></li>
-          <li><Link href="/privacy" className="hover:underline">Privacy Policy</Link></li>
+          <li><Link href="/random" className="hover:underline">Random</Link></li>
+          <li><Link href="/home" className="hover:underline">Home</Link></li>
         </ul>
       </div>
 
