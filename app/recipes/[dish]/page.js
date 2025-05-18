@@ -25,7 +25,7 @@ const DishPage = () => {
       }
     };
 
-    // if (dish) fetchData();
+    if (dish) fetchData();
   }, [dish]);
 
   return (
@@ -51,7 +51,6 @@ const DishPage = () => {
       {/* Recipe List Section */}
       <div className="bg-amber-50 pb-10">
         <FoodList foodData={foodData} setFoodID={setFoodID} />
-        <FoodDetail foodID={foodID} />
       </div>
     </div>
   );

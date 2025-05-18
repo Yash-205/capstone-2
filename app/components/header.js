@@ -19,7 +19,7 @@ const Header = () => {
     <>
       <header
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-100 ${
-          scrolled ? 'bg-amber-400 shadow-md' : 'bg-transparent'
+          scrolled ? 'bg-amber-300 shadow-md' : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
