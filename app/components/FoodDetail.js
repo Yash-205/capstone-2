@@ -13,6 +13,7 @@ const FoodDetail = ({ foodID }) => {
   useEffect(() => {
     async function fetchRecipe() {
       try {
+        setIsLoading(true);
         const res = await fetch(`${url}?apiKey=${API_Key}`);
         if (!res.ok) throw new Error('Failed to fetch data');
         const data = await res.json();
@@ -31,24 +32,34 @@ const FoodDetail = ({ foodID }) => {
   }, [foodID, url]);
 
   if (error) {
-    return <div className="text-red-600 text-center">{error}</div>;
+    return <div className="text-red-600 text-center mt-10">{error}</div>;
   }
 
   return (
     <div>
-      {foodID && (
+      {/* Show loading message until data is loaded */}
+      {isLoading ? (
+        <div className="min-h-screen flex items-center justify-center text-gray-500">
+          Loading...
+        </div>
+      ) : (
         <>
-          {/* Full Screen Background Image Section */}
-          <section
-            className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url(${food.image || "/placeholder-image.jpg"})`,
-            }}
-          >
-            <h1 className="text-5xl md:text-6xl font-bold text-white text-center px-4 drop-shadow-lg max-w-3xl">
-              {food.title}
-            </h1>
-          </section>
+          {/* Background Image Section (only if food.image exists) */}
+          {food.image && (
+            <section
+              className="min-h-screen flex items-center justify-center bg-cover bg-center relative text-white"
+              style={{
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url('${food.image}')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            >
+              <h1 className="text-5xl md:text-6xl font-bold text-white text-center px-4 drop-shadow-lg max-w-3xl">
+                {food.title}
+              </h1>
+            </section>
+          )}
 
           {/* Content below the hero */}
           <div className="max-w-4xl mx-auto p-6">
@@ -69,11 +80,9 @@ const FoodDetail = ({ foodID }) => {
             {/* Ingredients Section */}
             <div className="bg-amber-50 p-6 rounded-xl shadow-inner mb-6">
               <h2 className="text-2xl font-semibold mb-4 text-gray-800">Ingredients</h2>
-              {isLoading ? (
-                <p className="text-center text-gray-500">Loading...</p>
-              ) : (
+              {food.extendedIngredients && food.extendedIngredients.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {food.extendedIngredients?.map((item) => (
+                  {food.extendedIngredients.map((item) => (
                     <div key={item.id} className="bg-white rounded-lg p-4 shadow-sm flex flex-col items-center text-center">
                       <Image
                         src={`https://spoonacular.com/cdn/ingredients_100x100/${item.image}`}
@@ -87,24 +96,22 @@ const FoodDetail = ({ foodID }) => {
                     </div>
                   ))}
                 </div>
+              ) : (
+                <p className="text-center text-gray-500">No ingredients available.</p>
               )}
             </div>
 
             {/* Instructions */}
             <div>
               <h2 className="text-2xl font-semibold text-gray-800 mb-3">Instructions</h2>
-              {isLoading ? (
-                <p className="text-center text-gray-500">Loading...</p>
+              {food.analyzedInstructions && food.analyzedInstructions.length > 0 && food.analyzedInstructions[0].steps.length > 0 ? (
+                food.analyzedInstructions[0].steps.map((step, i) => (
+                  <div key={i} className="p-4 bg-gray-50 rounded-lg shadow-sm mb-3">
+                    <span className="text-gray-700">{i + 1}. {step.step}</span>
+                  </div>
+                ))
               ) : (
-                food.analyzedInstructions && food.analyzedInstructions.length > 0 ? (
-                  food.analyzedInstructions[0]?.steps.map((step, i) => (
-                    <div key={i} className="p-4 bg-gray-50 rounded-lg shadow-sm mb-3">
-                      <span className="text-gray-700">{i + 1}. {step.step}</span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500">No instructions available</p>
-                )
+                <p className="text-center text-gray-500">No instructions available.</p>
               )}
             </div>
           </div>

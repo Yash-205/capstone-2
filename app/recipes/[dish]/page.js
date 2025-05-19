@@ -32,18 +32,17 @@ const DishPage = () => {
     <div className="min-h-screen flex flex-col">
       {/* Hero Section with background image and dish name card */}
       <section
-        className="min-h-screen flex flex-col bg-cover bg-no-repeat"
+        className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.06), rgba(255,255,255,0.06)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')",
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.01), rgba(0,0,0,0.01)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')`,
         }}
-      >
+        >
 
         <div className="flex-grow flex items-center justify-center px-4">
-          <div className="p-4 max-w-xl w-full text-center space-y-6 bg-white/10  rounded-xl">
-            <h2 className="text-3xl font-bold text-shadow-black">
-              Recipes for {dish}
-            </h2>
+          <div className="p-4 max-w-xl w-full text-center  bg-black/20 rounded-xl">
+          <h1 className="text-5xl md:text-6xl font-bold text-white text-center px-4 drop-shadow-lg max-w-3xl">
+           Recipes for {dish}
+          </h1>
           </div>
         </div>
       </section>
