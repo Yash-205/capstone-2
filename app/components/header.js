@@ -13,7 +13,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = ['home','random', 'blog', 'about'];
+  const navLinks = ['Home','Random', 'Blog', 'About'];
 
   return (
     <>
@@ -25,7 +25,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
           <Link
             href="/"
-            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-700 transition-all transform hover:scale-105"
+            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-700/90 transition-all transform hover:scale-105"
           >
             NutriPlated
           </Link>
@@ -34,8 +34,8 @@ const Header = () => {
             {navLinks.map((text) => (
               <Link
                 key={text}
-                href={text === 'home' ? '/' : `/${text}`}
-                className="text-white transition-all duration-100 hover:text-amber-700 hover:scale-125 font-medium"
+                href={text === 'home' ? '/' : `/${text.toLowerCase()}`}
+                className="text-white transition-all duration-100 hover:text-amber-700/90 hover:scale-125 font-medium"
               >
                 {text}
               </Link>
@@ -64,7 +64,7 @@ const Header = () => {
                 <Link
                   href={text === 'Home' ? '/' : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className="block text-white text-lg font-medium transition-all hover:text-amber-700 transition-all transform hover:scale-105"
+                  className="block text-white text-lg font-medium transition-all hover:text-amber-700/90 transition-all transform hover:scale-105"
                 >
                   {text}
                 </Link>
