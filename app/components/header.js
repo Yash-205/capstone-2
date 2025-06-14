@@ -25,7 +25,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
           <Link
             href="/"
-            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-600 transition-all transform hover:scale-105"
+            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-700 transition-all transform hover:scale-105"
           >
             NutriPlated
           </Link>
@@ -35,7 +35,7 @@ const Header = () => {
               <Link
                 key={text}
                 href={text === 'home' ? '/' : `/${text}`}
-                className="text-white transition-all duration-100 hover:text-amber-500 hover:scale-125 font-medium"
+                className="text-white transition-all duration-100 hover:text-amber-700 hover:scale-125 font-medium"
               >
                 {text}
               </Link>
@@ -64,7 +64,7 @@ const Header = () => {
                 <Link
                   href={text === 'Home' ? '/' : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className="block text-white text-lg font-medium transition-all hover:text-amber-500 transition-all transform hover:scale-105"
+                  className="block text-white text-lg font-medium transition-all hover:text-amber-700 transition-all transform hover:scale-105"
                 >
                   {text}
                 </Link>
