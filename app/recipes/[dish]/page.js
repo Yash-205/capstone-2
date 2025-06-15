@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import FoodList from "../../components/FoodList";
-import FoodDetail from "../../components/FoodDetail";
+
 
 const URL = "https://api.spoonacular.com/recipes/complexSearch";
 const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
@@ -12,7 +12,6 @@ const DishPage = () => {
   const params = useParams();
   const dish = decodeURIComponent(params.dish);
   const [foodData, setFoodData] = useState([]);
-  const [foodID, setFoodID] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,7 +54,7 @@ const DishPage = () => {
         {loading ? (
           <div className="text-xl text-gray-500 animate-pulse">Loading recipes...</div>
         ) : (
-          <FoodList foodData={foodData} setFoodID={setFoodID} />
+          <FoodList foodData={foodData} />
         )}
       </div>
     </div>

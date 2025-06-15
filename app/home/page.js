@@ -25,7 +25,7 @@ export default function Home() {
       >
         <div className="flex-grow flex items-center justify-center px-4">
           <div className="p-4 max-w-xl w-full text-center space-y-6 bg-black/40  rounded-xl">
-            <h2 className="text-4xl md:text-4xl font-bold text-amber-100 text-center px-4 drop-shadow-lg max-w-4xl">
+            <h2 className="text-4xl md:text-4xl font-bold text-amber-50 text-center px-4 drop-shadow-lg max-w-4xl">
               Find Delicious Recipes
             </h2>
             <div className="flex items-center gap-4">
@@ -34,7 +34,7 @@ export default function Home() {
                 onChange={(e) => setDish(e.target.value)}
                 type="text"
                 placeholder="Search for recipes..."
-                className="w-full p-4 border border-amber-600 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder-amber-100 placeholder-shadow-black placeholder-bold text-amber-100 text-bold"
+                className="w-full p-4 border border-amber-600 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder-amber-50 placeholder-shadow-black placeholder-bold text-amber-100 text-bold"
               />
               <button
                 onClick={handleSearch}
