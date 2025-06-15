@@ -9,7 +9,6 @@ export default function VideoDetailPage() {
   const [video, setVideo] = useState(null);
   const [similarVideos, setSimilarVideos] = useState([]);
   const [showPlayer, setShowPlayer] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -23,10 +22,7 @@ export default function VideoDetailPage() {
     const handleFsChange = () => {
       const fsElement =
         document.fullscreenElement || document.webkitFullscreenElement;
-      const inFullscreen = !!fsElement;
-      setIsFullscreen(inFullscreen);
-
-      if (!inFullscreen && iframeRef.current) {
+      if (!fsElement && iframeRef.current) {
         iframeRef.current.contentWindow?.postMessage(
           JSON.stringify({
             event: 'command',
@@ -73,19 +69,16 @@ export default function VideoDetailPage() {
           className="relative h-screen bg-cover bg-center flex items-center justify-center"
           style={{ backgroundImage: `url(${video.thumbnail})` }}
         >
+          <div className="absolute inset-0 bg-black/60" />
           <button
             onClick={handlePlay}
-            className="text-white bg-black/60 px-8 py-4 rounded-full text-xl font-bold hover:bg-black transition"
+            className="relative z-10 text-white bg-black/60 px-8 py-4 rounded-full text-xl font-bold hover:bg-black transition"
           >
             ▶ Play Video
           </button>
         </div>
       ) : (
-        <div
-          className={`w-full h-screen bg-black transition-opacity duration-300 ${
-            isFullscreen ? 'opacity-100' : 'opacity-70'
-          }`}
-        >
+        <div className="w-full h-screen bg-black">
           <iframe
             ref={iframeRef}
             className="w-full h-full"
@@ -98,14 +91,43 @@ export default function VideoDetailPage() {
       )}
 
       {/* Video Info */}
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-3xl font-bold">{video.title}</h1>
-        <p className="text-gray-600 mt-1">
-          {Math.round(video.length / 60)} min • {video.views} views
-        </p>
-      </div>
+        <div className="w-full px-16 py-8 bg-amber-50 border-y shadow-sm">
+        <h1 className="text-3xl font-bold text-amber-700 mb-6">
+            {video.title}
+        </h1>
 
-      {/* Similar Videos Grid */}
+        <div className="flex flex-col sm:flex-row justify-between gap-y-8 text-gray-800 text-lg">
+            {/* Left Column */}
+            <div className="w-full sm:w-[45%]">
+            {video.title !== video.shortTitle && (
+                <div className="mb-4">
+                <span className="block font-semibold text-amber-700">Short Title:</span>
+                <p>{video.shortTitle}</p>
+                </div>
+            )}
+            <div>
+                <span className="block font-semibold text-amber-700">Rating:</span>
+                <p>{video.rating}</p>
+            </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="w-full sm:w-[45%] sm:text-right">
+            <div className="mb-4">
+                <span className="block font-semibold text-amber-700">Views:</span>
+                <p>{video.views.toLocaleString()} views</p>
+            </div>
+            <div>
+                <span className="block font-semibold text-amber-700">Length:</span>
+                <p>
+                {Math.floor(video.length / 60)} min {video.length % 60} sec
+                </p>
+            </div>
+            </div>
+        </div>
+        </div>
+
+      {/* Similar Videos */}
       <section className="bg-amber-50 py-10 px-4 min-h-screen">
         <h2 className="text-2xl font-bold text-amber-800 mb-6 text-center">
           Similar Videos

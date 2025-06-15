@@ -1,51 +1,44 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
 import IngredientList from "./IngredientList";
+import Loader from "./Loader"; 
 
 const FoodDetail = ({ foodID }) => {
   const [food, setFood] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const API_Key = "cabd2858df4e41159380a077065b6b27";
   const url = `https://api.spoonacular.com/recipes/${foodID}/information`;
-  const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
 
-useEffect(() => {
-  const fetchRecipe = async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch(
-        `https://api.spoonacular.com/recipes/${foodID}/information?apiKey=${API_Key}`
-      );
-      if (!res.ok) throw new Error("Failed to fetch data");
-      const data = await res.json();
-      setFood(data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load recipe details.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`https://api.spoonacular.com/recipes/${foodID}/information?apiKey=${API_Key}`);
+        if (!res.ok) throw new Error("Failed to fetch data");
+        const data = await res.json();
+        setFood(data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load recipe details.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (foodID) {
-    fetchRecipe();
-  }
-}, [foodID]);
-
+    if (foodID) fetchRecipe();
+  }, [foodID]);
 
   if (error) {
     return <div className="text-red-600 text-center mt-10">{error}</div>;
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center text-amber-700 h-screen">
-        Loading...
-      </div>
-    );
-  }
+  return <Loader />;
+}
+
 
   return (
     <div className="w-full bg-amber-50/50">
@@ -75,6 +68,7 @@ useEffect(() => {
             />
           </div>
         )}
+
         {/* 📊 Meta Info */}
         <div
           className={`grid gap-4 text-amber-800 ${
@@ -123,7 +117,7 @@ useEffect(() => {
                   className="p-4 bg-white border-l-4 border-amber-400 rounded shadow-sm"
                 >
                   <p className="text-amber-700 font-medium">
-                    Step  {i + 1} : {" "}
+                    Step {i + 1} :{" "}
                     <span className="text-amber-900">{step.step}</span>
                   </p>
                 </div>

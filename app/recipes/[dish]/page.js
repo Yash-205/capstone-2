@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import FoodList from "../../components/FoodList";
-
+import Loader from "../../components/Loader";
 
 const URL = "https://api.spoonacular.com/recipes/complexSearch";
-const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
+const API_Key = "cabd2858df4e41159380a077065b6b27";
 
 const DishPage = () => {
   const params = useParams();
@@ -31,6 +31,8 @@ const DishPage = () => {
     if (dish) fetchData();
   }, [dish]);
 
+  if (loading) return <Loader />;
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
@@ -49,13 +51,9 @@ const DishPage = () => {
         </div>
       </section>
 
-      {/* Recipe List Section with Loader */}
+      {/* Recipe List Section */}
       <div className="bg-amber-50 pb-10 min-h-screen flex items-center justify-center">
-        {loading ? (
-          <div className="text-xl text-gray-500 animate-pulse">Loading recipes...</div>
-        ) : (
-          <FoodList foodData={foodData} />
-        )}
+        <FoodList foodData={foodData} />
       </div>
     </div>
   );

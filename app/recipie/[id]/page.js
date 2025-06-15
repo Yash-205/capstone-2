@@ -13,9 +13,7 @@ const RecipePage = () => {
   }, [id]);
 
   return (
-    <div >
       <FoodDetail foodID={foodID} />
-    </div>
   );
 };
 

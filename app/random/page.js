@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import FoodDetail from '../components/FoodDetail'; // adjust if path differs
+import FoodDetail from '../components/FoodDetail'; // adjust if needed
+import Loader from '../components/Loader'; // import your full-page loader
 
-const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
+const API_Key = "cabd2858df4e41159380a077065b6b27";
 
 const RandomRecipePage = () => {
   const [randomID, setRandomID] = useState(null);
@@ -19,8 +20,9 @@ const RandomRecipePage = () => {
       setRandomID(data.recipes[0].id);
     } catch (error) {
       console.error("Error fetching random recipe:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const RandomRecipePage = () => {
   }, []);
 
   if (loading || !randomID) {
-    return <div className="text-center text-amber-600 p-6">Loading random recipe...</div>;
+    return <Loader />;
   }
 
   return <FoodDetail foodID={randomID} />;
