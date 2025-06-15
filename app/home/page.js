@@ -15,9 +15,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col w-full">
       <section
-        className="min-h-screen flex flex-col bg-cover bg-no-repeat"
+        className="min-h-screen flex flex-col bg-cover bg-no-repeat w-full"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.01), rgba(255,255,255,0.01)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')",

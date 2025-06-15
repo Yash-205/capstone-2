@@ -13,7 +13,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = ['Home','Random', 'Blog', 'About'];
+  const navLinks = ['Home','Random', 'Videos'];
 
   return (
     <>
@@ -30,7 +30,7 @@ const Header = () => {
             NutriPlated
           </Link>
 
-          <nav className="hidden lg:flex space-x-6">
+          <nav className="hidden lg:flex space-x-6 ">
             {navLinks.map((text) => (
               <Link
                 key={text}
@@ -55,7 +55,7 @@ const Header = () => {
       {isOpen && (
         <div
           className={`lg:hidden fixed top-[72px] left-0 w-full z-40 px-6 pb-4 pt-4 transition-all duration-100 ${
-            scrolled ? 'bg-amber-400' : 'bg-transparent'
+            scrolled ? 'bg-amber-400/95' : 'bg-transparent'
           }`}
         >
           <ul className="space-y-4">
