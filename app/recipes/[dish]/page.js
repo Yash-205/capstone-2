@@ -6,7 +6,7 @@ import FoodList from "../../components/FoodList";
 import Loader from "../../components/Loader";
 
 const URL = "https://api.spoonacular.com/recipes/complexSearch";
-const API_Key = "cabd2858df4e41159380a077065b6b27";
+const API_Key = "e98e8939d2144d3b85d71bf592bc4a61";
 
 const DishPage = () => {
   const params = useParams();

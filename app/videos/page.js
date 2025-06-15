@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import Loader from "../components/Loader"; // Adjust path if needed
 
-const API_KEY = "cabd2858df4e41159380a077065b6b27";
+const API_KEY = "e98e8939d2144d3b85d71bf592bc4a61";
 const getVideoUrl = (id) => `https://www.youtube.com/embed/${id}`;
 
 const defaultDishes = [
@@ -23,11 +24,12 @@ const defaultDishes = [
 const RecipeVideosPage = () => {
   const [videos, setVideos] = useState([]);
   const [input, setInput] = useState("");
-  const [randomDish, setRandomDish] = useState("");
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const fetchVideos = async (query) => {
     try {
+      setLoading(true);
       const randomOffset = Math.floor(Math.random() * 100);
       const res = await fetch(
         `https://api.spoonacular.com/food/videos/search?query=${query}&number=18&offset=${randomOffset}&apiKey=${API_KEY}`
@@ -36,13 +38,14 @@ const RecipeVideosPage = () => {
       setVideos(data.videos || []);
     } catch (err) {
       console.error("Video fetch error", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const dish =
       defaultDishes[Math.floor(Math.random() * defaultDishes.length)];
-    setRandomDish(dish);
     fetchVideos(dish);
   }, []);
 
@@ -62,6 +65,13 @@ const RecipeVideosPage = () => {
     router.push(`/videos/${video.youTubeId}`);
   };
 
+  // 👇 Full Screen Loader while loading
+  if (loading) {
+    return (
+        <Loader />
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
@@ -69,7 +79,7 @@ const RecipeVideosPage = () => {
         className="min-h-screen flex flex-col bg-cover bg-no-repeat bg-center"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.01), rgba(255,255,255,0.01)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')",
+            "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('/pexels-mvdheuvel-2284166.jpg')",
         }}
       >
         <div className="flex-grow flex items-center justify-center px-4">
