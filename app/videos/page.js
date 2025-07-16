@@ -10,13 +10,11 @@ const getVideoUrl = (id) => `https://www.youtube.com/embed/${id}`;
 
 const defaultDishes = [
   "pasta",
-  "biryani",
   "salad",
   "soup",
   "noodles",
   "burger",
   "paneer",
-  "chicken",
   "rice",
   "pizza",
 ];

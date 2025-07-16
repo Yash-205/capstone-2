@@ -91,7 +91,7 @@ export default function VideoDetailPage() {
       )}
 
       {/* Video Info */}
-        <div className="w-full px-16 py-8 bg-amber-50 border-y shadow-sm">
+        <div className="w-full px-10 py-8 bg-amber-50 border-y shadow-sm">
         <h1 className="text-3xl font-bold text-amber-700 mb-6">
             {video.title}
         </h1>

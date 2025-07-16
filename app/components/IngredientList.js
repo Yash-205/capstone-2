@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-const API_Key = "85fd6d7dc9d846749e4897b4817b28f7";
+const API_Key = "e98e8939d2144d3b85d71bf592bc4a61";
 
 const IngredientList = ({ ingredients }) => {
   const [selectedIngredient, setSelectedIngredient] = useState(null);

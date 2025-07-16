@@ -6,16 +6,16 @@ import animationData from '../../public/loader-animation.json';
 
 const triviaList = [
   "Peaches are the third most popular fruit grown in America.",
-  "A cluster of bananas is called a ‘hand’. A single banana is called a ‘finger’.",
+  "A cluster of bananas is called a hand. A single banana is called a finger.",
   "The largest item on any menu in the world is the roast camel.",
   "Turnips are high in fibre, Vitamin C, Calcium and Potassium.",
   "There are more than 600 pasta shapes produced worldwide.",
   "Eating a lot of beetroot turns your pee into a pink colour.",
   "Coconut water can be used as blood plasma.",
-  "The world’s most expensive chocolate costs $2600 per kilogram.",
+  "The world's most expensive chocolate costs $2600 per kilogram.",
   "One of the most popular pizza toppings in Brazil is green peas.",
   "Radishes are members of the same family as cabbages.",
-  "Onion is Latin for ‘large pearl’."
+  "Onion is Latin for large pearl."
 ];
 
 const Loader = () => {
