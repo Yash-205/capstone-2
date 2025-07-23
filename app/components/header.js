@@ -1,3 +1,4 @@
+// components/header.js
 'use client';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -13,7 +14,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = ['Home','Random', 'Videos'];
+  const navLinks = ['Home', 'Random', 'Videos'];
 
   return (
     <>
@@ -30,19 +31,30 @@ const Header = () => {
             NutriPlated
           </Link>
 
-          <nav className="hidden lg:flex space-x-6 ">
+          <nav className="hidden lg:flex space-x-6 items-center">
             {navLinks.map((text) => (
               <Link
                 key={text}
-                href={text === 'home' ? '/' : `/${text.toLowerCase()}`}
+                href={text === 'Home' ? '/' : `/${text.toLowerCase()}`}
                 className="text-white transition-all duration-100 hover:text-amber-600 hover:scale-125 font-medium"
               >
                 {text}
               </Link>
             ))}
+            <Link
+              href="/login"
+              className="text-white hover:text-amber-600 font-medium"
+            >
+              Login
+            </Link>
+            <Link
+              href="/signup"
+              className="text-white hover:text-amber-600 font-medium"
+            >
+              Sign Up
+            </Link>
           </nav>
 
-          {/* Hamburger */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden text-white focus:outline-none"
@@ -64,12 +76,30 @@ const Header = () => {
                 <Link
                   href={text === 'Home' ? '/' : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className="block text-white text-lg font-medium transition-all hover:text-amber-600 transition-all transform hover:scale-105"
+                  className="block text-white text-lg font-medium transition-all hover:text-amber-600 hover:scale-105"
                 >
                   {text}
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/login"
+                onClick={() => setIsOpen(false)}
+                className="block text-white text-lg font-medium hover:text-amber-600 hover:scale-105"
+              >
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/signup"
+                onClick={() => setIsOpen(false)}
+                className="block text-white text-lg font-medium hover:text-amber-600 hover:scale-105"
+              >
+                Sign Up
+              </Link>
+            </li>
           </ul>
         </div>
       )}
