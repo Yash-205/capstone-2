@@ -8,9 +8,21 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const res = await axios.get('/api/auth/me'); // Use your backend endpoint
-      setUser(res.data.user);
+      const res = await fetch('http://localhost:5050/api/auth/me', {
+        credentials: 'include', // required to send cookies
+      });
+
+      const data = await res.json();
+      console.log('[CHECK_AUTH]', data);
+
+      if (!res.ok) {
+        setUser(null);
+        return;
+      }
+
+      setUser(data.user);
     } catch (err) {
+      console.error('[CHECK_AUTH ERROR]', err);
       setUser(null);
     }
   };

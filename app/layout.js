@@ -2,7 +2,7 @@
 import "./globals.css";
 import Footer from "./components/footer";
 import Header from "./components/header";
-import { AuthProvider } from "./context/AuthContext"; // Add this
+import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
   title: "NutriPlated",
