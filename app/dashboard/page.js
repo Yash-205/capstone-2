@@ -25,7 +25,7 @@ export default function DashboardPage() {
 
   const fetchUserAndShoppingList = async () => {
     try {
-      const userRes = await fetch("https://capstone-2-pvx5.onrender.com/api/auth/me", {
+      const userRes = await fetch("https://capstone-2-3-hmts.onrender.com/api/auth/me", {
         credentials: "include",
       });
 
@@ -35,7 +35,7 @@ export default function DashboardPage() {
       setUser(userData.user);
       setDiet(userData.user?.dietPreference || "");
 
-      const listRes = await fetch("https://capstone-2-pvx5.onrender.com/api/shopping-list", {
+      const listRes = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
         credentials: "include",
       });
 
@@ -53,7 +53,7 @@ export default function DashboardPage() {
 
   const updateDiet = async () => {
     try {
-      const res = await fetch("https://capstone-2-pvx5.onrender.com/api/auth/diet", {
+      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/auth/diet", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -69,7 +69,7 @@ export default function DashboardPage() {
 
   const handleDeleteItem = async (item) => {
     try {
-      const res = await fetch("https://capstone-2-pvx5.onrender.com/api/shopping-list", {
+      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -14,7 +14,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const res = await fetch('https://capstone-2-pvx5.onrender.com/api/auth/login', {
+      const res = await fetch('https://capstone-2-3-hmts.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

@@ -23,7 +23,7 @@ const IngredientList = ({ ingredients }) => {
       if (!user) return;
 
       try {
-        const res = await fetch("https://capstone-2-pvx5.onrender.com/api/shopping-list", {
+        const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
           method: "GET",
           credentials: "include",
         });
@@ -76,7 +76,7 @@ const IngredientList = ({ ingredients }) => {
     }
 
     try {
-      const res = await fetch("https://capstone-2-pvx5.onrender.com/api/shopping-list", {
+      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -95,7 +95,7 @@ const IngredientList = ({ ingredients }) => {
 
   const handleDeleteFromList = async (ingredientName) => {
     try {
-      const res = await fetch("https://capstone-2-pvx5.onrender.com/api/shopping-list", {
+      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
         method: "DELETE",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

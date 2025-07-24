@@ -8,7 +8,7 @@ const CommentBox = ({ foodID }) => {
   const [text, setText] = useState("");
 
   const fetchComments = async () => {
-    const res = await fetch(`https://capstone-2-pvx5.onrender.com/api/comments/${foodID}`, {
+    const res = await fetch(`https://capstone-2-3-hmts.onrender.com/api/comments/${foodID}`, {
       credentials: "include",
     });
     const data = await res.json();
@@ -19,7 +19,7 @@ const CommentBox = ({ foodID }) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    await fetch("https://capstone-2-pvx5.onrender.com/api/comments", {
+    await fetch("https://capstone-2-3-hmts.onrender.com/api/comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
