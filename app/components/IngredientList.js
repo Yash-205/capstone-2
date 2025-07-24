@@ -86,6 +86,7 @@ const IngredientList = ({ ingredients }) => {
       if (!res.ok) throw new Error("Add failed");
 
       setAddedItems((prev) => [...prev, ingredientName]);
+      alert(`✅ Added ${ingredientName} to shopping list`);
     } catch (err) {
       console.error("Add error", err);
       alert("Failed to add item");
@@ -104,6 +105,7 @@ const IngredientList = ({ ingredients }) => {
       if (!res.ok) throw new Error("Delete failed");
 
       setAddedItems((prev) => prev.filter((item) => item !== ingredientName));
+      alert(`🗑️ Removed ${ingredientName} from shopping list`);
     } catch (err) {
       console.error("Delete error", err);
       alert("Failed to remove item");

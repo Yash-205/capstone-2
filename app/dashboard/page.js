@@ -68,22 +68,24 @@ export default function DashboardPage() {
   };
 
   const handleDeleteItem = async (item) => {
-    try {
-      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ item }),
-      });
+  try {
+    const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ item }),
+    });
 
-      if (!res.ok) throw new Error("Delete failed");
+    if (!res.ok) throw new Error("Delete failed");
 
-      setShoppingList((prev) => prev.filter((i) => i !== item));
-    } catch (err) {
-      alert("Failed to delete item");
-      console.error(err);
-    }
-  };
+    setShoppingList((prev) => prev.filter((i) => i !== item));
+    alert(`🗑️ Removed ${ingredientName} from shopping list`);
+  } catch (err) {
+    alert("Failed to delete item ❌");
+    console.error("[DELETE_ITEM ERROR]", err);
+  }
+};
+
 
   if (!user)
     return <Loader/>;
