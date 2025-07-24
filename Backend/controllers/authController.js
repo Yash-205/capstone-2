@@ -68,7 +68,11 @@ export const getMe = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie("token").json({ msg: "Logged out" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // true on Render
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  }).status(200).json({ msg: "Logged out" });
 };
 
 export const updateUserDiet = async (req, res) => {
