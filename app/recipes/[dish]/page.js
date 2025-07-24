@@ -33,39 +33,46 @@ const DishPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDiet, setSelectedDiet] = useState("");
 
-  const fetchData = async (dietParam = "") => {
-    try {
-      setLoading(true);
-      let apiURL = `${URL}?query=${dish}&number=9&apiKey=${API_Key}`;
-
-      const diet = user?.dietPreference || dietParam;
-      if (diet && diet !== "No Diet") {
-        apiURL += `&diet=${diet}`;
-      }
-
-      const res = await fetch(apiURL);
-      const data = await res.json();
-      setFoodData(data.results || []);
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // 1️⃣ Set selected diet from user's preference on first load
   useEffect(() => {
-    fetchData(selectedDiet);
-  }, [dish, user, selectedDiet]);
+    if (user?.dietPreference) {
+      setSelectedDiet(user.dietPreference);
+    }
+  }, [user]);
+
+  // 2️⃣ Fetch recipes whenever dish or selected diet changes
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        let apiURL = `${URL}?query=${dish}&number=9&apiKey=${API_Key}`;
+
+        if (selectedDiet && selectedDiet !== "No Diet") {
+          apiURL += `&diet=${selectedDiet}`;
+        }
+
+        const res = await fetch(apiURL);
+        const data = await res.json();
+        setFoodData(data.results || []);
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [dish, selectedDiet]);
 
   const handleDietSelect = (diet) => {
-    setSelectedDiet(diet === selectedDiet ? "" : diet); // Toggle
+    setSelectedDiet(diet === selectedDiet ? "" : diet); // toggle logic
   };
 
   if (loading) return <Loader />;
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Hero Section */}
+      {/* 🥘 Hero Section */}
       <section
         className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative"
         style={{
@@ -78,17 +85,17 @@ const DishPage = () => {
               Recipes for {dish}
             </h1>
 
-            {user?.dietPreference && (
+            {selectedDiet && selectedDiet !== "No Diet" && (
               <p className="text-white mt-2 text-lg">
-                Showing recipes for your diet preference:{" "}
-                <span className="font-semibold">{user.dietPreference}</span>
+                Showing recipes for:{" "}
+                <span className="font-semibold">{selectedDiet}</span>
               </p>
             )}
           </div>
         </div>
       </section>
 
-      {/* Diet Filter Strip for Guests */}
+      {/* 🧃 Diet Filter (only shown if user has no saved preference) */}
       {!user?.dietPreference && (
         <div className="bg-amber-50 py-6 px-4">
           <h2 className="text-xl font-semibold text-amber-700 mb-3">Diets:</h2>
@@ -111,7 +118,7 @@ const DishPage = () => {
         </div>
       )}
 
-      {/* Recipe List Section */}
+      {/* 🥗 Recipe List */}
       <div className="bg-amber-50 py-10 px-4">
         <FoodList foodData={foodData} />
       </div>
