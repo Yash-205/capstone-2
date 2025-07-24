@@ -30,6 +30,9 @@ const Header = () => {
 
   const navLinks = ["Home", "Random", "Videos"];
 
+  const commonLinkClass =
+    "text-white transition-transform transform duration-200 hover:text-amber-600 hover:scale-110 font-medium";
+
   return (
     <>
       <header
@@ -40,52 +43,48 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
           <Link
             href="/"
-            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-600 transition-all transform hover:scale-105"
+            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-600 transition-transform transform hover:scale-110"
           >
             NutriPlated
           </Link>
 
+          {/* Desktop Nav */}
           <nav className="hidden lg:flex space-x-6 items-center">
             {navLinks.map((text) => (
               <Link
                 key={text}
                 href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
-                className="text-white transition-all duration-100 hover:text-amber-600 hover:scale-125 font-medium"
+                className={commonLinkClass}
               >
                 {text}
               </Link>
             ))}
+
             {user ? (
               <div className="flex items-center space-x-4">
                 <button
                   onClick={handleLogout}
-                  className="text-white hover:text-red-500 font-medium"
+                  className={`${commonLinkClass} bg-transparent border-none`}
                 >
                   Logout
                 </button>
-                <span className="text-white font-medium">
-                  Welcome, {user.name.split(" ")[0]} 👋
-                </span>
-                
+                <Link href="/dashboard" className={`${commonLinkClass}`}>
+                  Welcome, {user.name.split(" ")[0]}
+                </Link>
               </div>
             ) : (
               <>
-                <Link
-                  href="/login"
-                  className="text-white hover:text-amber-600 font-medium"
-                >
+                <Link href="/login" className={commonLinkClass}>
                   Login
                 </Link>
-                <Link
-                  href="/signup"
-                  className="text-white hover:text-amber-600 font-medium"
-                >
+                <Link href="/signup" className={commonLinkClass}>
                   Sign Up
                 </Link>
               </>
             )}
           </nav>
 
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden text-white focus:outline-none"
@@ -95,6 +94,7 @@ const Header = () => {
         </div>
       </header>
 
+      {/* Mobile Drawer */}
       {isOpen && (
         <div
           className={`lg:hidden fixed top-[72px] left-0 w-full z-40 px-6 pb-4 pt-4 transition-all duration-100 ${
@@ -107,30 +107,35 @@ const Header = () => {
                 <Link
                   href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className="block text-white text-lg font-medium transition-all hover:text-amber-600 hover:scale-105"
+                  className={`${commonLinkClass} block text-lg`}
                 >
                   {text}
                 </Link>
               </li>
             ))}
+
             {user ? (
-              <><li>
+              <>
+                <li>
                   <button
                     onClick={() => {
                       handleLogout();
                       setIsOpen(false);
                     }}
-                    className="block text-white text-lg font-medium hover:text-red-500 hover:scale-105"
+                    className={`${commonLinkClass} block text-left w-full`}
                   >
                     Logout
                   </button>
                 </li>
                 <li>
-                  <span className="block text-white text-lg font-medium">
-                    Welcome, {user.name.split(" ")[0]} 👋
-                  </span>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setIsOpen(false)}
+                    className={`${commonLinkClass} block text-lg`}
+                  >
+                    Welcome, {user.name.split(" ")[0]}
+                  </Link>
                 </li>
-                
               </>
             ) : (
               <>
@@ -138,7 +143,7 @@ const Header = () => {
                   <Link
                     href="/login"
                     onClick={() => setIsOpen(false)}
-                    className="block text-white text-lg font-medium hover:text-amber-600 hover:scale-105"
+                    className={`${commonLinkClass} block text-lg`}
                   >
                     Login
                   </Link>
@@ -147,7 +152,7 @@ const Header = () => {
                   <Link
                     href="/signup"
                     onClick={() => setIsOpen(false)}
-                    className="block text-white text-lg font-medium hover:text-amber-600 hover:scale-105"
+                    className={`${commonLinkClass} block text-lg`}
                   >
                     Sign Up
                   </Link>

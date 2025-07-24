@@ -70,3 +70,18 @@ export const getMe = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("token").json({ msg: "Logged out" });
 };
+
+export const updateUserDiet = async (req, res) => {
+  try {
+    const { dietPreference } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { dietPreference },
+      { new: true }
+    );
+    res.json({ user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error updating diet" });
+  }
+};
