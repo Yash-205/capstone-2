@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import IngredientList from "./IngredientList";
 import Loader from "./Loader"; 
-
+import CommentBox from './CommentBox';
 const FoodDetail = ({ foodID }) => {
   const [food, setFood] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -128,6 +128,8 @@ const FoodDetail = ({ foodID }) => {
             <p className="text-amber-600">No instructions available.</p>
           )}
         </div>
+
+        <CommentBox foodID={foodID} />
       </div>
     </div>
   );

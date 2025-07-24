@@ -4,7 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
-
+import commentRoutes from './routes/commentRoutes.js';
 dotenv.config();
 connectDB();
 
@@ -20,6 +20,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/comments', commentRoutes);
 
 // Server
 const PORT = process.env.PORT || 5050;
