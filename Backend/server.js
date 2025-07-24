@@ -10,10 +10,13 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://recipe-finder-orpin-pi.vercel.app'
+];
 // Middlewares
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(cookieParser());
