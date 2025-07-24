@@ -1,16 +1,50 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext"; // adjust path if needed
 
-const API_Key = "e98e8939d2144d3b85d71bf592bc4a61";
+const API_Key = "cabd2858df4e41159380a077065b6b27";
 
 const IngredientList = ({ ingredients }) => {
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [substitutes, setSubstitutes] = useState([]);
   const [subError, setSubError] = useState("");
+  const [loadingIngredient, setLoadingIngredient] = useState(null);
+  const [addedItems, setAddedItems] = useState([]);
+
+  const { user } = useAuth();
+  const router = useRouter();
+
+  // ✅ Pre-load shopping list items for logged-in users
+  useEffect(() => {
+    const fetchShoppingList = async () => {
+      if (!user) return;
+
+      try {
+        const res = await fetch("http://localhost:5050/api/shopping-list", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const items = data.items?.map((i) => i.item) || [];
+          setAddedItems(items);
+        } else {
+          console.warn("Failed to fetch shopping list");
+        }
+      } catch (err) {
+        console.error("Error fetching shopping list:", err);
+      }
+    };
+
+    fetchShoppingList();
+  }, [user]);
 
   const fetchSubstitutes = async (ingredientName) => {
+    setLoadingIngredient(ingredientName);
     try {
       const res = await fetch(
         `https://api.spoonacular.com/food/ingredients/substitutes?ingredientName=${ingredientName}&apiKey=${API_Key}`
@@ -30,6 +64,51 @@ const IngredientList = ({ ingredients }) => {
       setSubstitutes([]);
       setSubError("Failed to fetch substitutes.");
       setSelectedIngredient(ingredientName);
+    } finally {
+      setLoadingIngredient(null);
+    }
+  };
+
+  const handleAddToList = async (ingredientName) => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5050/api/shopping-list", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item: ingredientName }),
+      });
+
+      if (!res.ok) throw new Error("Add failed");
+
+      setAddedItems((prev) => [...prev, ingredientName]);
+      alert(`✅ Added ${ingredientName} to shopping list`);
+    } catch (err) {
+      console.error("Add error", err);
+      alert("Failed to add item");
+    }
+  };
+
+  const handleDeleteFromList = async (ingredientName) => {
+    try {
+      const res = await fetch("http://localhost:5050/api/shopping-list", {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item: ingredientName }),
+      });
+
+      if (!res.ok) throw new Error("Delete failed");
+
+      setAddedItems((prev) => prev.filter((item) => item !== ingredientName));
+      alert(`🗑️ Removed ${ingredientName} from shopping list`);
+    } catch (err) {
+      console.error("Delete error", err);
+      alert("Failed to remove item");
     }
   };
 
@@ -37,7 +116,9 @@ const IngredientList = ({ ingredients }) => {
     <div className="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-xl shadow-lg w-full">
       <h2 className="text-3xl font-semibold text-amber-800 mb-4">
         Ingredients{" "}
-        <span className="text-sm text-amber-600">(Tap for substitutes)</span>
+        <span className="text-sm text-amber-600">
+          (Click Substitute to see alternatives)
+        </span>
       </h2>
 
       {ingredients && ingredients.length > 0 ? (
@@ -45,8 +126,7 @@ const IngredientList = ({ ingredients }) => {
           {ingredients.map((item, index) => (
             <div
               key={`${index}-${item.id}`}
-              onClick={() => fetchSubstitutes(item.name)}
-              className="group cursor-pointer bg-white shadow-sm border-l-4 border-amber-400 rounded-lg p-4 shadow hover:shadow-lg hover:shadow-amber-400 transition-transform hover:scale-105 duration-300 h-full flex flex-col justify-between"
+              className="group bg-white shadow-sm border-l-4 border-amber-400 rounded-lg p-4 hover:shadow-lg hover:shadow-amber-400 transition-transform hover:scale-105 duration-300 h-full flex flex-col justify-between"
             >
               <div className="flex flex-col items-center text-center h-full">
                 <Image
@@ -63,6 +143,62 @@ const IngredientList = ({ ingredients }) => {
                   {item.amount} {item.unit}
                 </p>
               </div>
+
+              <div className="mt-4 flex gap-2 items-center">
+                <button
+                  onClick={() => handleAddToList(item.name)}
+                  className="bg-green-500 text-white px-1 py-1 rounded text-sm hover:bg-green-600 shadow w-full"
+                >
+                  Add
+                </button>
+
+                {user && addedItems.includes(item.name) && (
+                  <button
+                    onClick={() => handleDeleteFromList(item.name)}
+                    className="bg-red-500 text-white px-1 py-1 rounded text-sm hover:bg-red-600 shadow w-full"
+                  >
+                    Delete
+                  </button>
+                )}
+
+                <button
+                  onClick={() => fetchSubstitutes(item.name)}
+                  className={`${
+                    loadingIngredient === item.name
+                      ? "bg-amber-400 cursor-not-allowed"
+                      : "bg-amber-500 hover:bg-amber-600"
+                  } text-white px-1 py-1 rounded text-sm shadow w-full flex items-center justify-center gap-1`}
+                  disabled={loadingIngredient === item.name}
+                >
+                  {loadingIngredient === item.name ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        ></path>
+                      </svg>
+                      Loading...
+                    </>
+                  ) : (
+                    "Substitute"
+                  )}
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -73,7 +209,7 @@ const IngredientList = ({ ingredients }) => {
       {selectedIngredient && (
         <div className="bg-white mt-6 p-4 rounded-lg border-l-4 border-amber-500 shadow-inner">
           <h3 className="text-lg font-semibold text-amber-800 mb-2">
-            Substitutes for :{" "}
+            Substitutes for:{" "}
             <span className="text-amber-600">{selectedIngredient}</span>
           </h3>
           {substitutes.length > 0 ? (

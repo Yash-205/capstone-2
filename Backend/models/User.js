@@ -10,10 +10,11 @@ const userSchema = new mongoose.Schema({
     enum: [
       'Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian',
       'Ovo-Vegetarian', 'Vegan', 'Pescetarian', 'Paleo',
-      'Primal', 'Low FODMAP', 'Whole30',""
+      'Primal', 'Low FODMAP', 'Whole30',''
     ],
     default: ''
-  }
+  },
+  shoppingList: [{ type: String }]
 });
 
 export default mongoose.models.User || mongoose.model('User', userSchema);

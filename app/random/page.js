@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import FoodDetail from '../components/FoodDetail'; // adjust if needed
 import Loader from '../components/Loader'; // import your full-page loader
 
-const API_Key = "e98e8939d2144d3b85d71bf592bc4a61";
+const API_Key = "cabd2858df4e41159380a077065b6b27";
 
 const RandomRecipePage = () => {
   const [randomID, setRandomID] = useState(null);

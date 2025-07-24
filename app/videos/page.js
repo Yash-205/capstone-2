@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import Loader from "../components/Loader"; // Adjust path if needed
 
-const API_KEY = "e98e8939d2144d3b85d71bf592bc4a61";
+const API_KEY = "cabd2858df4e41159380a077065b6b27";
 const getVideoUrl = (id) => `https://www.youtube.com/embed/${id}`;
 
 const defaultDishes = [
