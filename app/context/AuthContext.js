@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const res = await fetch('http://localhost:5050/api/auth/me', {
+      const res = await fetch('https://capstone-2-pvx5.onrender.com/api/auth/me', {
         credentials: 'include', // required to send cookies
       });
 

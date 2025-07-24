@@ -17,7 +17,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5050/api/auth/logout", {
+      await fetch("https://capstone-2-pvx5.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });

@@ -13,7 +13,7 @@ export default function SignupPage() {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:5050/api/auth/signup', {
+      const res = await fetch('https://capstone-2-pvx5.onrender.com/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
