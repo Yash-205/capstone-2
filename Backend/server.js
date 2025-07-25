@@ -14,7 +14,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://recipe-finder-orpin-pi.vercel.app',
   'https://recipe-finder-9i8xcppd4-yash-205s-projects.vercel.app/',
-  "https://recipe-finder-cdavlr7zl-yash-205s-projects.vercel.app/"
+  "https://recipe-finder-cdavlr7zl-yash-205s-projects.vercel.app/",
+  "https://recipe-finder-deciwpi68-yash-205s-projects.vercel.app/"
 ];
 // Middlewares
 app.use(cors({
