@@ -43,7 +43,7 @@ const FoodDetail = ({ foodID }) => {
 
   return (
     <div className="w-full bg-amber-50/50">
-      {/* 🖼️ Hero Section */}
+      {/* Hero Section */}
       {food.image && (
         <section
           className="min-h-screen flex items-center justify-center bg-cover bg-center relative text-white"
@@ -57,9 +57,9 @@ const FoodDetail = ({ foodID }) => {
         </section>
       )}
 
-      {/* 📄 Content */}
+      {/* Content */}
       <div className="w-full px-6 py-10 space-y-10">
-        {/* 📝 Summary */}
+        {/* Summary */}
         {food.summary && (
           <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-600">
             <h2 className="text-3xl font-semibold text-amber-800 mb-4">Description</h2>
@@ -70,7 +70,7 @@ const FoodDetail = ({ foodID }) => {
           </div>
         )}
 
-        {/* 📊 Meta Info */}
+        {/* Meta Info */}
         <div
           className={`grid gap-4 text-amber-800 ${
             food.vegan ? "grid-cols-2 md:grid-cols-4" : "grid-cols-2 md:grid-cols-3"
@@ -92,7 +92,7 @@ const FoodDetail = ({ foodID }) => {
           )}
         </div>
 
-        {/* 💲 Price Info */}
+        {/*  Price Info */}
         <div className="text-lg text-amber-800 bg-white border-l-4 border-amber-600 p-4 rounded shadow-md">
           <span className="font-semibold">Price:</span>{" "}
           {food.pricePerServing ? (
@@ -102,12 +102,12 @@ const FoodDetail = ({ foodID }) => {
           )}
         </div>
 
-        {/* 🥕 Ingredients */}
+        {/*  Ingredients */}
         {food.extendedIngredients && (
           <IngredientList ingredients={food.extendedIngredients} />
         )}
 
-        {/* 📝 Instructions */}
+        {/*  Instructions */}
         <div className=" bg-amber-50 p-6 rounded-lg shadow-lg border-l-4 border-amber-600">
           <h2 className="text-3xl font-semibold text-amber-800 mb-4">Instructions</h2>
           {food.analyzedInstructions?.[0]?.steps?.length > 0 ? (

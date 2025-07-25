@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
+import { useAuth } from "../context/AuthContext";
+
 const diets = [
   "Gluten Free",
   "Ketogenic",
@@ -15,84 +17,85 @@ const diets = [
   "Primal",
   "Low FODMAP",
   "Whole30",
+  ""
 ];
 
 export default function DashboardPage() {
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
   const [diet, setDiet] = useState("");
   const [shoppingList, setShoppingList] = useState([]);
   const router = useRouter();
 
-  const fetchUserAndShoppingList = async () => {
+  const fetchShoppingList = async () => {
     try {
-      const userRes = await fetch("https://capstone-2-3-hmts.onrender.com/api/auth/me", {
-        credentials: "include",
-      });
-
-      if (!userRes.ok) throw new Error("Not authenticated");
-
-      const userData = await userRes.json();
-      setUser(userData.user);
-      setDiet(userData.user?.dietPreference || "");
-
-      const listRes = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
-        credentials: "include",
-      });
-
+      const listRes = await fetch(
+        "https://capstone-2-3-hmts.onrender.com/api/shopping-list",
+        { credentials: "include" }
+      );
+      if (!listRes.ok) throw new Error("Failed to fetch shopping list");
       const listData = await listRes.json();
-      if (listRes.ok) setShoppingList(listData.shoppingList || []);
+      setShoppingList(listData.shoppingList || []);
     } catch (err) {
-      console.error(err);
-      router.push("/login");
+      console.error("[FETCH_SHOPPING_LIST]", err);
     }
   };
 
   useEffect(() => {
-    fetchUserAndShoppingList();
-  }, []);
+    if (!user) {
+      router.push("/login");
+    } else {
+      setDiet(user.dietPreference || "");
+      fetchShoppingList();
+    }
+  }, [user]);
 
   const updateDiet = async () => {
     try {
-      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/auth/diet", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ dietPreference: diet }),
-      });
+      const res = await fetch(
+        "https://capstone-2-3-hmts.onrender.com/api/auth/diet",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ dietPreference: diet }),
+        }
+      );
 
       if (!res.ok) throw new Error("Update failed");
-      alert("Diet preference updated!");
+      alert("✅ Diet preference updated!");
     } catch (error) {
-      alert("Error updating diet preference");
+      console.error("[UPDATE_DIET_ERROR]", error);
+      alert("❌ Error updating diet preference");
     }
   };
 
   const handleDeleteItem = async (item) => {
-  try {
-    const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ item }),
-    });
+    try {
+      const res = await fetch(
+        "https://capstone-2-3-hmts.onrender.com/api/shopping-list",
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ item }),
+        }
+      );
 
-    if (!res.ok) throw new Error("Delete failed");
+      if (!res.ok) throw new Error("Delete failed");
 
-    setShoppingList((prev) => prev.filter((i) => i !== item));
-    alert(`🗑️ Removed ${ingredientName} from shopping list`);
-  } catch (err) {
-    alert("Failed to delete item ❌");
-    console.error("[DELETE_ITEM ERROR]", err);
-  }
-};
+      setShoppingList((prev) => prev.filter((i) => i !== item));
+      alert(`🗑️ Removed ${item} from shopping list`);
+    } catch (err) {
+      alert("❌ Failed to delete item");
+      console.error("[DELETE_ITEM ERROR]", err);
+    }
+  };
 
-
-  if (!user)
-    return <Loader/>;
+  if (!user) return <Loader />;
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Hero Section with user info */}
+      {/* Hero Section */}
       <section
         className="min-h-[60vh] flex flex-col items-center justify-center bg-cover bg-center relative"
         style={{

@@ -6,7 +6,7 @@ const CommentBox = ({ foodID }) => {
   const { user } = useAuth();
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
-  const [isPosting, setIsPosting] = useState(false); // 👈 new loading state
+  const [isPosting, setIsPosting] = useState(false);
 
   const fetchComments = async () => {
     const res = await fetch(`https://capstone-2-3-hmts.onrender.com/api/comments/${foodID}`, {
@@ -20,7 +20,7 @@ const CommentBox = ({ foodID }) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    setIsPosting(true); // 👈 Start loading
+    setIsPosting(true); 
     try {
       await fetch("https://capstone-2-3-hmts.onrender.com/api/comments", {
         method: "POST",
@@ -34,7 +34,7 @@ const CommentBox = ({ foodID }) => {
     } catch (error) {
       console.error("Error posting comment:", error);
     } finally {
-      setIsPosting(false); // 👈 Stop loading
+      setIsPosting(false); 
     }
   };
 
