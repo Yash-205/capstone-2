@@ -9,7 +9,7 @@ router.get('/:foodId', async (req, res) => {
   try {
     const comments = await Comment.find({ foodId: req.params.foodId })
       .sort({ createdAt: -1 })
-      .populate('user', 'name'); // 👈 this adds user's name
+      .populate('user', 'name'); 
 
     res.json(comments);
   } catch (err) {
@@ -27,7 +27,7 @@ router.post('/', protect, async (req, res) => {
     const newComment = await Comment.create({
       foodId,
       text,
-      user: req.user.id, // 👈 taken from the decoded JWT
+      user: req.user.id, 
     });
 
     const populatedComment = await newComment.populate('user', 'name');

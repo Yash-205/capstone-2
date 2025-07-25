@@ -11,24 +11,15 @@ export const signup = async (req, res) => {
     if (existing) return res.status(400).json({ msg: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword });
+    await User.create({ name, email, password: hashedPassword });
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
-
-    res
-      .cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-        maxAge: 60 * 60 * 1000,
-      })
-      .status(201)
-      .json({ msg: "User created" });
+    res.status(201).json({ msg: "User created. Please login." });
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Error signing up" });
   }
 };
+
 
 export const login = async (req, res) => {
   const { email, password } = req.body;

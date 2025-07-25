@@ -8,6 +8,6 @@ router.post('/signup', signup);
 router.post('/login', login);
 router.get('/me', protect, getMe);
 router.post('/logout', logout);
-router.put('/diet', protect, updateUserDiet); // 🔥 new route added
+router.put('/diet', protect, updateUserDiet); 
 
 export default router;
