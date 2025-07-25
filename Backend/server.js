@@ -6,22 +6,30 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import shoppingListRoutes from './routes/shoppingListRoutes.js';
+
 dotenv.config();
 connectDB();
 
 const app = express();
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://recipe-finder-orpin-pi.vercel.app',
-  'https://recipe-finder-9i8xcppd4-yash-205s-projects.vercel.app/',
-  "https://recipe-finder-cdavlr7zl-yash-205s-projects.vercel.app/",
-  "https://recipe-finder-deciwpi68-yash-205s-projects.vercel.app/"
-];
+
+// Dynamic CORS origin matching
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (
+      !origin || // allow mobile/postman
+      origin.includes('localhost') ||
+      origin.startsWith('https://recipe-finder') // matches all recipe-finder Vercel preview URLs
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  },
+  credentials: true,
+};
+
 // Middlewares
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
@@ -30,9 +38,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/shopping-list', shoppingListRoutes);
 
-
 // Server
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
