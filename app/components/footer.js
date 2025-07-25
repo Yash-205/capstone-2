@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="bg-amber-400/95 text-white py-8">
     <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 px-4 text-sm">
       <div>
-        <h4 className="font-semibold text-lg mb-2">NutriPlated</h4>
+        <h4 className="font-semibold text-lg mb-2">Recipe Finder</h4>
         <p>Explore culinary traditions, discover healthy meals, and cook like a pro.</p>
       </div>
 

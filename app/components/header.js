@@ -45,7 +45,7 @@ const Header = () => {
             href="/"
             className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-600 transition-transform transform hover:scale-110"
           >
-            NutriPlated
+            Recipe Finder
           </Link>
 
           {/* Desktop Nav */}

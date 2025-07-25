@@ -5,7 +5,7 @@ import Header from "./components/header";
 import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
-  title: "NutriPlated",
+  title: "Recipe Finder",
   description: "Your personal nutrition and recipe guide",
 };
 
