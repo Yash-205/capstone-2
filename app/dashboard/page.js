@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import { useAuth } from "../context/AuthContext";
-
+//fixed
 const diets = [
   "Gluten Free",
   "Ketogenic",
