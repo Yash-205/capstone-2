@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { motion } from "framer-motion";
 import FoodList from "../../components/FoodList";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../context/AuthContext";
 
 const URL = "https://api.spoonacular.com/recipes/complexSearch";
-const API_Key = "cabd2858df4e41159380a077065b6b27";
+const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
 
 const diets = [
   "No Diet",
@@ -33,14 +34,14 @@ const DishPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDiet, setSelectedDiet] = useState("");
 
-  // 1️⃣ Set selected diet from user's preference on first load
+  // Set selected diet from user's preference on first load
   useEffect(() => {
     if (user?.dietPreference) {
       setSelectedDiet(user.dietPreference);
     }
   }, [user]);
 
-  // 2️⃣ Fetch recipes whenever dish or selected diet changes
+  // Fetch recipes whenever dish or selected diet changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,63 +66,117 @@ const DishPage = () => {
   }, [dish, selectedDiet]);
 
   const handleDietSelect = (diet) => {
-    setSelectedDiet(diet === selectedDiet ? "" : diet); // toggle logic
+    setSelectedDiet(diet === selectedDiet ? "" : diet);
   };
 
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* 🥘 Hero Section */}
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
+      {/* Hero Section */}
       <section
-        className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative"
+        className="min-h-screen flex flex-col justify-center bg-cover bg-center relative"
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.01), rgba(0,0,0,0.01)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')`,
+          backgroundImage: `url('/photo2.jpg')`,
         }}
       >
-        <div className="flex-grow flex flex-col items-center justify-center px-4">
-          <div className="p-4 max-w-xl w-full text-center bg-black/20 rounded-xl">
-            <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
-              Recipes for {dish}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
+        
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl"
+          >
+            <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
+              RECIPES FOR <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#f1c40f]">{dish.toUpperCase()}</span>
             </h1>
-
+            <p className="md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-4 border-l-2 border-[#d4af37] pl-6">
+              {foodData.length > 0 
+                ? `Found ${foodData.length} delicious ${foodData.length === 1 ? 'recipe' : 'recipes'} for you to explore.`
+                : 'Searching for the perfect recipes...'
+              }
+            </p>
             {selectedDiet && selectedDiet !== "No Diet" && (
-              <p className="text-white mt-2 text-lg">
-                Showing recipes for:{" "}
-                <span className="font-semibold">{selectedDiet}</span>
+              <p className="md:text-lg text-[#d4af37] font-medium tracking-wide max-w-2xl pl-6">
+                Filtered by: {selectedDiet}
               </p>
             )}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* 🧃 Diet Filter (only shown if user has no saved preference) */}
+      {/* Diet Filter */}
       {!user?.dietPreference && (
-        <div className="bg-amber-50 py-6 px-4">
-          <h2 className="text-xl font-semibold text-amber-700 mb-3">Diets:</h2>
-          <div className="flex space-x-3 overflow-x-auto pb-2">
-            {diets.map((diet) => (
-              <button
-                key={diet}
-                onClick={() => handleDietSelect(diet)}
-                className={`whitespace-nowrap px-5 py-2 rounded-full border-2 text-sm font-medium transition 
-                  ${
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-[#0a0a0a] border-y border-white/5 py-12 px-6"
+        >
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
+              <h2 className="text-xl font-bold text-[#d4af37] font-serif tracking-tight uppercase">
+                Dietary Preferences
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {diets.map((diet) => (
+                <motion.button
+                  key={diet}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleDietSelect(diet)}
+                  className={`px-4 py-3 text-sm font-medium uppercase tracking-wider transition-all duration-300 ${
                     selectedDiet === diet
-                      ? "bg-amber-500 text-white border-amber-500"
-                      : "bg-white text-amber-700 border-amber-300 hover:bg-amber-100"
+                      ? "bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/30"
+                      : "bg-[#111] text-gray-400 border border-white/10 hover:border-[#d4af37]/50 hover:text-[#d4af37]"
                   }`}
-              >
-                {diet}
-              </button>
-            ))}
+                >
+                  {diet}
+                </motion.button>
+              ))}
+            </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
-      {/* 🥗 Recipe List */}
-      <div className="bg-amber-50 py-10 px-4">
-        <FoodList foodData={foodData} />
-      </div>
+      {/* Recipe List */}
+      <section className="w-full bg-[#0a0a0a] py-24 md:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex flex-col items-center mb-16 md:mb-24"
+          >
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-[#d4af37] uppercase tracking-[0.3em] text-sm font-medium mb-4 section-header-line"
+            >
+              Search Results
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-4xl md:text-6xl font-bold text-white text-center font-serif tracking-tight leading-tight"
+            >
+              Discover Recipes
+            </motion.h2>
+          </motion.div>
+          <FoodList foodData={foodData} />
+        </div>
+      </section>
     </div>
   );
 };

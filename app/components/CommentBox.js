@@ -1,5 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useCallback } from "react";
+import { motion } from "framer-motion";
+import { Send, MessageCircle, User, Calendar } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const CommentBox = ({ foodID }) => {
@@ -10,7 +13,7 @@ const CommentBox = ({ foodID }) => {
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const res = await fetch(
       `${API_BASE_URL}/api/comments/${foodID}`,
       {
@@ -19,7 +22,7 @@ const CommentBox = ({ foodID }) => {
     );
     const data = await res.json();
     setComments(data);
-  };
+  }, [foodID, API_BASE_URL]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,34 +48,43 @@ const CommentBox = ({ foodID }) => {
 
   useEffect(() => {
     fetchComments();
-  }, [foodID]);
+  }, [fetchComments]);
 
   return (
-    <div className="p-6 rounded-lg shadow-lg border-l-4 bg-amber-50 border-amber-600">
-      <h3 className="text-2xl font-semibold text-amber-800 mb-4">Comments</h3>
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="bg-[#111] border border-white/5 p-8 shadow-xl"
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <MessageCircle className="w-8 h-8 text-[#d4af37]" />
+        <h3 className="text-4xl font-bold text-[#d4af37] font-serif tracking-tight">Comments</h3>
+      </div>
 
       {user ? (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mb-8">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Write your comment..."
-            className="w-full px-4 py-3 rounded-lg border border-amber-400 bg-white text-amber-900 placeholder-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
-            rows={3}
+            placeholder="Share your thoughts about this recipe..."
+            className="w-full px-6 py-4 bg-[#0a0a0a] border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] transition-colors resize-none"
+            rows={4}
           />
           <button
             type="submit"
             disabled={isPosting}
             className={`${
               isPosting
-                ? "bg-amber-400 cursor-not-allowed"
-                : "bg-amber-500 hover:bg-amber-600"
-            } text-white font-semibold py-2 px-6 rounded-lg transition flex items-center justify-center gap-2`}
+                ? "bg-[#d4af37]/50 cursor-not-allowed"
+                : "bg-transparent border-2 border-[#d4af37] hover:bg-[#d4af37]"
+            } text-[#d4af37] hover:text-black font-bold py-3 px-8 transition-all duration-300 uppercase tracking-widest text-sm flex items-center justify-center gap-2`}
           >
             {isPosting ? (
               <>
                 <svg
-                  className="animate-spin h-4 w-4 text-white"
+                  className="animate-spin h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -94,16 +106,19 @@ const CommentBox = ({ foodID }) => {
                 Posting...
               </>
             ) : (
-              "Post Comment"
+              <>
+                <Send className="w-4 h-4" />
+                Post Comment
+              </>
             )}
           </button>
         </form>
       ) : (
-        <p className="text-sm text-gray-600">
+        <p className="text-gray-400 mb-8">
           Please{" "}
           <a
             href="/login"
-            className="text-amber-600 underline hover:text-amber-800"
+            className="text-[#d4af37] underline hover:text-[#f1c40f] transition-colors"
           >
             log in
           </a>{" "}
@@ -111,23 +126,39 @@ const CommentBox = ({ foodID }) => {
         </p>
       )}
 
-      <div className="mt-8 space-y-6">
-        {comments.map((comment) => (
-          <div
-            key={comment._id}
-            className="bg-white p-4 rounded-lg shadow border-l-4 border-amber-400"
-          >
-            <p className="font-semibold text-amber-800">
-              {comment.user?.name || "Anonymous"}
-            </p>
-            <p className="text-amber-900 mt-1">{comment.text}</p>
-            <p className="text-xs text-amber-600 mt-2">
-              {new Date(comment.createdAt).toLocaleString()}
-            </p>
-          </div>
-        ))}
+      <div className="space-y-4">
+        {comments.length > 0 ? (
+          comments.map((comment, index) => (
+            <motion.div
+              key={comment._id}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="bg-[#0a0a0a] p-6 border-l-2 border-[#d4af37]"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-[#d4af37]/20 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-[#d4af37]" />
+                </div>
+                <div>
+                  <p className="font-bold text-white">
+                    {comment.user?.name || "Anonymous"}
+                  </p>
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Calendar className="w-3 h-3" />
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+              <p className="text-gray-300 leading-relaxed ml-13">{comment.text}</p>
+            </motion.div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 py-8">No comments yet. Be the first to comment!</p>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

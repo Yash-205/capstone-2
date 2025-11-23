@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
-import Loader from "../components/Loader"; // Adjust path if needed
+import { motion } from "framer-motion";
+import Loader from "../components/Loader";
 
-const API_KEY = "cabd2858df4e41159380a077065b6b27";
+const API_KEY = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
 const getVideoUrl = (id) => `https://www.youtube.com/embed/${id}`;
 
 const defaultDishes = [
@@ -30,7 +30,7 @@ const RecipeVideosPage = () => {
       setLoading(true);
       const randomOffset = Math.floor(Math.random() * 100);
       const res = await fetch(
-        `https://api.spoonacular.com/food/videos/search?query=${query}&number=18&offset=${randomOffset}&apiKey=${API_KEY}`
+        `https://api.spoonacular.com/food/videos/search?query=${query}&number=9&offset=${randomOffset}&apiKey=${API_KEY}`
       );
       const data = await res.json();
       setVideos(data.videos || []);
@@ -63,75 +63,149 @@ const RecipeVideosPage = () => {
     router.push(`/videos/${video.youTubeId}`);
   };
 
-  // 👇 Full Screen Loader while loading
   if (loading) {
-    return (
-        <Loader />
-    );
+    return <Loader />;
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col w-full bg-gray-50">
       {/* Hero Section */}
       <section
-        className="min-h-screen flex flex-col bg-cover bg-no-repeat bg-center"
+        className="min-h-screen flex flex-col justify-center bg-cover bg-center w-full relative"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('/pexels-mvdheuvel-2284166.jpg')",
+          backgroundImage: "url('/photo2.jpg')",
         }}
       >
-        <div className="flex-grow flex items-center justify-center px-4">
-          <div className="p-4 max-w-xl w-full text-center space-y-6 bg-black/40 rounded-xl">
-            <h2 className="text-4xl font-bold text-amber-50 drop-shadow-lg">
-              Watch Videos
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
+        
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
+          <div className="max-w-4xl animate-fade-in-up">
+            <h2 className="text-7xl md:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
+              RECIPE <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#f1c40f]">VIDEOS</span>
             </h2>
-            <form onSubmit={handleSearch} className="flex items-center gap-4">
+            <p className="md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-12 border-l-2 border-[#d4af37] pl-6">
+              Master the art of cooking with our curated collection of step-by-step video tutorials.
+            </p>
+            
+            <form onSubmit={handleSearch} className="flex items-center gap-0 w-full max-w-2xl bg-[#0a0a0a] border border-[#d4af37] p-2 shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-300 hover:shadow-[0_0_70px_rgba(212,175,55,0.25)] transform hover:-translate-y-1">
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 type="text"
-                placeholder="Search for videos..."
-                className="w-full p-4 border border-amber-600 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder-amber-50 text-amber-100 bg-transparent"
+                placeholder="Search for recipe videos..."
+                className="flex-grow bg-transparent text-white placeholder-gray-500 focus:outline-none text-xl px-6 py-4 font-light tracking-wide"
               />
               <button
                 type="submit"
-                className="p-4 bg-amber-400 text-white rounded-lg hover:bg-amber-600"
+                className="px-8 py-4 bg-[#d4af37] text-black font-bold tracking-widest hover:bg-[#f1c40f] transition-all duration-300 uppercase text-sm"
               >
-                <Search className="w-6 h-6" />
+                SEARCH
               </button>
             </form>
           </div>
         </div>
       </section>
 
-      {/* Videos Grid */}
-      <section className="bg-amber-50 py-10 px-4 min-h-screen">
-        {videos.length === 0 ? (
-          <p className="text-center text-gray-500 text-xl">No videos found.</p>
-        ) : (
-          <div className="px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {videos.map((video) => (
-              <div
-                key={video.youTubeId}
-                onClick={() => handleVideoClick(video)}
-                className="cursor-pointer group flex flex-col bg-white border-l-8 border-amber-400 p-4 rounded-xl shadow-2xl transition-all duration-300 hover:shadow-amber-500/90 hover:scale-105"
-              >
-                <iframe
-                  className="rounded-md w-full h-48 mb-4 pointer-events-none"
-                  src={getVideoUrl(video.youTubeId)}
-                  allowFullScreen
-                  title={video.title}
-                />
-                <h3 className="text-lg font-semibold text-amber-800 mb-2 group-hover:text-amber-600 transition-all">
-                  {video.title}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {Math.round(video.length / 60)} min • {video.views} views
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+      {/* Videos Grid Section */}
+      <section className="w-full bg-[#0a0a0a] py-24 md:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex flex-col items-center mb-16 md:mb-24"
+          >
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-[#d4af37] uppercase tracking-[0.3em] text-sm font-medium mb-4 section-header-line"
+            >
+              Curated Collection
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-4xl md:text-6xl font-bold text-white text-center font-serif tracking-tight leading-tight"
+            >
+              Featured Videos
+            </motion.h2>
+          </motion.div>
+
+          {videos.length === 0 ? (
+            <p className="text-center text-gray-400 text-xl">No videos found.</p>
+          ) : (
+            <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {videos.map((video, index) => (
+                <motion.div
+                  key={video.youTubeId}
+                  initial={{ opacity: 0, y: 60, scale: 0.9 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.15,
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }}
+                  onClick={() => handleVideoClick(video)}
+                  className="cursor-pointer group flex flex-col bg-[#111] border border-white/5 p-0 rounded-none shadow-xl transition-all duration-500 hover:shadow-[#d4af37]/20 hover:-translate-y-2"
+                >
+                  <div className="relative overflow-hidden">
+                    <motion.div
+                      initial={{ scale: 1.2, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: index * 0.15 + 0.2 }}
+                    >
+                      <iframe
+                        className="w-full h-64 pointer-events-none"
+                        src={getVideoUrl(video.youTubeId)}
+                        allowFullScreen
+                        title={video.title}
+                      />
+                    </motion.div>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500"></div>
+                  </div>
+
+                  <div className="p-6 flex flex-col flex-grow">
+                    <motion.h3 
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.15 + 0.3 }}
+                      className="text-xl font-serif text-white mb-4 line-clamp-2 group-hover:text-[#d4af37] transition-colors duration-300 tracking-wide"
+                    >
+                      {video.title}
+                    </motion.h3>
+
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.15 + 0.4 }}
+                      className="mt-auto"
+                    >
+                      <p className="text-sm text-gray-400 mb-4">
+                        {Math.round(video.length / 60)} min • {video.views.toLocaleString()} views
+                      </p>
+                      <div className="pt-4 relative">
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                        <button className="w-full py-3 bg-transparent border border-white/20 text-gray-300 text-sm uppercase tracking-widest hover:bg-[#d4af37] hover:text-black hover:border-[#d4af37] transition-all duration-300">
+                          Watch Now
+                        </button>
+                      </div>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
       </section>
     </div>
   );

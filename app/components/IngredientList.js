@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Plus, Trash2, RefreshCw } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-const API_Key = "cabd2858df4e41159380a077065b6b27";
+const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const IngredientList = ({ ingredients }) => {
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [substitutes, setSubstitutes] = useState([]);
@@ -113,13 +116,19 @@ const IngredientList = ({ ingredients }) => {
   };
 
   return (
-    <div className="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-xl shadow-lg w-full">
-      <h2 className="text-3xl font-semibold text-amber-800 mb-4">
-        Ingredients{" "}
-        <span className="text-sm text-amber-600">
-          (Click Substitute to see alternatives)
-        </span>
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="bg-[#111] border border-white/5 p-8 shadow-xl w-full"
+    >
+      <h2 className="text-4xl font-bold text-[#d4af37] mb-2 font-serif tracking-tight">
+        Ingredients
       </h2>
+      <p className="text-gray-400 text-sm mb-8 uppercase tracking-wider">
+        Click substitute to see alternatives
+      </p>
 
       {ingredients && ingredients.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
@@ -127,9 +136,13 @@ const IngredientList = ({ ingredients }) => {
             const isAdded = addedItems.includes(item.name);
 
             return (
-              <div
+              <motion.div
                 key={`${index}-${item.id}`}
-                className="group bg-white shadow-sm border-l-4 border-amber-400 rounded-lg p-4 hover:shadow-lg hover:shadow-amber-400 transition-transform hover:scale-105 duration-300 h-full flex flex-col justify-between"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="group bg-[#0a0a0a] border border-white/5 p-4 hover:border-[#d4af37]/30 transition-all duration-300 hover:shadow-lg hover:shadow-[#d4af37]/10 h-full flex flex-col justify-between"
               >
                 <div className="flex flex-col items-center text-center h-full">
                   <Image
@@ -137,12 +150,12 @@ const IngredientList = ({ ingredients }) => {
                     alt={item.name}
                     width={80}
                     height={80}
-                    className="h-20 w-20 object-contain mb-2 rounded group-hover:scale-125 transition-transform duration-300"
+                    className="h-20 w-20 object-contain mb-3 rounded group-hover:scale-110 transition-transform duration-300"
                   />
-                  <h3 className="font-medium text-amber-700 text-base md:text-lg group-hover:text-amber-500">
+                  <h3 className="font-medium text-white text-base group-hover:text-[#d4af37] transition-colors">
                     {item.name}
                   </h3>
-                  <p className="text-sm text-amber-600 group-hover:text-amber-400">
+                  <p className="text-sm text-gray-400 mt-1">
                     {item.amount} {item.unit}
                   </p>
                 </div>
@@ -151,15 +164,17 @@ const IngredientList = ({ ingredients }) => {
                   {isAdded ? (
                     <button
                       onClick={() => handleDeleteFromList(item.name)}
-                      className="bg-red-500 text-white px-1 py-1 rounded text-sm hover:bg-red-600 shadow w-full"
+                      className="bg-red-600/20 border border-red-600/50 text-red-400 px-2 py-2 text-xs hover:bg-red-600/30 transition-all w-full flex items-center justify-center gap-1 uppercase tracking-wider"
                     >
-                      Delete
+                      <Trash2 className="w-3 h-3" />
+                      Remove
                     </button>
                   ) : (
                     <button
                       onClick={() => handleAddToList(item.name)}
-                      className="bg-green-500 text-white px-1 py-1 rounded text-sm hover:bg-green-600 shadow w-full"
+                      className="bg-green-600/20 border border-green-600/50 text-green-400 px-2 py-2 text-xs hover:bg-green-600/30 transition-all w-full flex items-center justify-center gap-1 uppercase tracking-wider"
                     >
+                      <Plus className="w-3 h-3" />
                       Add
                     </button>
                   )}
@@ -168,66 +183,58 @@ const IngredientList = ({ ingredients }) => {
                     onClick={() => fetchSubstitutes(item.name)}
                     className={`${
                       loadingIngredient === item.name
-                        ? "bg-amber-400 cursor-not-allowed"
-                        : "bg-amber-500 hover:bg-amber-600"
-                    } text-white px-1 py-1 rounded text-sm shadow w-full flex items-center justify-center gap-1`}
+                        ? "bg-[#d4af37]/20 cursor-not-allowed"
+                        : "bg-[#d4af37]/20 hover:bg-[#d4af37]/30 border-[#d4af37]/50"
+                    } border text-[#d4af37] px-2 py-2 text-xs transition-all w-full flex items-center justify-center gap-1 uppercase tracking-wider`}
                     disabled={loadingIngredient === item.name}
                   >
                     {loadingIngredient === item.name ? (
                       <>
-                        <svg
-                          className="animate-spin h-4 w-4 text-white"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                          ></path>
-                        </svg>
-                        Loading...
+                        <RefreshCw className="w-3 h-3 animate-spin" />
+                        Loading
                       </>
                     ) : (
-                      "Substitute"
+                      <>
+                        <RefreshCw className="w-3 h-3" />
+                        Sub
+                      </>
                     )}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       ) : (
-        <p className="text-center text-amber-600">No ingredients available.</p>
+        <p className="text-center text-gray-500">No ingredients available.</p>
       )}
 
       {selectedIngredient && (
-        <div className="bg-white mt-6 p-4 rounded-lg border-l-4 border-amber-500 shadow-inner">
-          <h3 className="text-lg font-semibold text-amber-800 mb-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-[#0a0a0a] mt-8 p-6 border border-[#d4af37]/30 shadow-lg"
+        >
+          <h3 className="text-xl font-bold text-[#d4af37] mb-3 font-serif">
             Substitutes for:{" "}
-            <span className="text-amber-600">{selectedIngredient}</span>
+            <span className="text-white">{selectedIngredient}</span>
           </h3>
           {substitutes.length > 0 ? (
-            <ul className="list-disc list-inside text-amber-700">
+            <ul className="space-y-2">
               {substitutes.map((sub, index) => (
-                <li key={index}>{sub}</li>
+                <li key={index} className="text-gray-300 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-[#d4af37] rounded-full"></span>
+                  {sub}
+                </li>
               ))}
             </ul>
           ) : (
-            <p className="text-red-500">{subError}</p>
+            <p className="text-red-400">{subError}</p>
           )}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

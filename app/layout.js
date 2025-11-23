@@ -11,9 +11,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <AuthProvider> 
+        <AuthProvider>
           <Header />
           <div className="mx-auto min-h-screen">
             {children}

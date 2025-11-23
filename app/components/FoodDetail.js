@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Clock, Users, Leaf, Sprout, DollarSign, Heart } from "lucide-react";
 import IngredientList from "./IngredientList";
 import Loader from "./Loader";
 import CommentBox from "./CommentBox";
+
 const FoodDetail = ({ foodID }) => {
   const [food, setFood] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_Key = "cabd2858df4e41159380a077065b6b27";
+  const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
   const url = `https://api.spoonacular.com/recipes/${foodID}/information`;
 
   useEffect(() => {
@@ -34,7 +37,11 @@ const FoodDetail = ({ foodID }) => {
   }, [foodID]);
 
   if (error) {
-    return <div className="text-red-600 text-center mt-10">{error}</div>;
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="text-red-500 text-center text-xl">{error}</div>
+      </div>
+    );
   }
 
   if (isLoading) {
@@ -42,37 +49,67 @@ const FoodDetail = ({ foodID }) => {
   }
 
   return (
-    <div className="w-full bg-amber-50/50">
+    <div className="w-full bg-[#0a0a0a] min-h-screen">
       {/* Hero Section */}
       {food.image && (
         <section
-          className="min-h-screen flex items-center justify-center bg-cover bg-center relative text-white"
+          className="min-h-screen flex flex-col justify-center bg-cover bg-center relative"
           style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('${food.image}')`,
+            backgroundImage: `url('${food.image}')`,
           }}
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-center px-4 drop-shadow-lg max-w-3xl">
-            {food.title}
-          </h1>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
+          
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-4xl"
+            >
+              <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
+                {food.title}
+              </h1>
+              {food.summary && (
+                <p 
+                  className="md:text-xl text-gray-300 font-light tracking-wide max-w-2xl border-l-2 border-[#d4af37] pl-6"
+                  dangerouslySetInnerHTML={{ 
+                    __html: food.summary.split('.')[0] + '.' 
+                  }}
+                />
+              )}
+            </motion.div>
+          </div>
         </section>
       )}
 
       {/* Content */}
-      <div className="w-full px-6 py-10 space-y-10">
+      <div className="w-full max-w-7xl mx-auto px-6 py-16 space-y-12">
         {/* Summary */}
         {food.summary && (
-          <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-600">
-            <h2 className="text-3xl font-semibold text-amber-800 mb-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-[#111] p-8 border border-white/5 shadow-xl"
+          >
+            <h2 className="text-4xl font-bold text-[#d4af37] mb-6 font-serif tracking-tight">
               Description
             </h2>
             <div
-              className="text-amber-900 text-base space-y-2 leading-relaxed"
+              className="text-gray-300 text-lg leading-relaxed space-y-3"
               dangerouslySetInnerHTML={{ __html: food.summary }}
             />
-          </div>
+          </motion.div>
         )}
+
         {/* Add to Favorites Button */}
-        <button
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
           onClick={async () => {
             try {
               const res = await fetch(
@@ -95,72 +132,111 @@ const FoodDetail = ({ foodID }) => {
               alert("❌ " + err.message);
             }
           }}
-          className="bg-amber-600 text-white px-6 py-3 rounded hover:bg-amber-700 mt-4"
+          className="w-full md:w-auto px-8 py-4 bg-transparent border-2 border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 uppercase tracking-widest font-bold text-sm flex items-center justify-center gap-2"
         >
-          ❤️ Add to Favorites
-        </button>
+          <Heart className="w-5 h-5" />
+          Add to Favorites
+        </motion.button>
 
         {/* Meta Info */}
-        <div
-          className={`grid gap-4 text-amber-800 ${
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className={`grid gap-6 ${
             food.vegan
               ? "grid-cols-2 md:grid-cols-4"
               : "grid-cols-2 md:grid-cols-3"
           }`}
         >
-          <div className="bg-white shadow-md p-4 rounded border-l-4 border-amber-600 font-medium">
-            🧑‍🍳 {food.readyInMinutes} Minutes
+          <div className="bg-[#111] border border-white/5 shadow-xl p-6 text-center">
+            <Clock className="w-10 h-10 mx-auto mb-3 text-[#d4af37]" />
+            <div className="text-[#d4af37] font-bold text-lg">{food.readyInMinutes}</div>
+            <div className="text-gray-400 text-sm uppercase tracking-wider">Minutes</div>
           </div>
-          <div className="bg-white shadow-md p-4 rounded border-l-4 border-amber-600 font-medium">
-            🍽️ Serves: {food.servings}
+          <div className="bg-[#111] border border-white/5 shadow-xl p-6 text-center">
+            <Users className="w-10 h-10 mx-auto mb-3 text-[#d4af37]" />
+            <div className="text-[#d4af37] font-bold text-lg">{food.servings}</div>
+            <div className="text-gray-400 text-sm uppercase tracking-wider">Servings</div>
           </div>
-          <div className="bg-white shadow-md p-4 rounded border-l-4 border-amber-600 font-medium">
-            {food.vegetarian ? "🥗 Vegetarian" : "🍗 Non-Vegetarian"}
+          <div className="bg-[#111] border border-white/5 shadow-xl p-6 text-center">
+            <Leaf className="w-10 h-10 mx-auto mb-3 text-[#d4af37]" />
+            <div className="text-[#d4af37] font-bold text-sm uppercase tracking-wider">
+              {food.vegetarian ? "Vegetarian" : "Non-Veg"}
+            </div>
           </div>
           {food.vegan && (
-            <div className="bg-white shadow-md p-4 rounded border-l-4 border-amber-600 font-medium">
-              🌱 Vegan
+            <div className="bg-[#111] border border-white/5 shadow-xl p-6 text-center">
+              <Sprout className="w-10 h-10 mx-auto mb-3 text-[#d4af37]" />
+              <div className="text-[#d4af37] font-bold text-sm uppercase tracking-wider">
+                Vegan
+              </div>
             </div>
           )}
-        </div>
+        </motion.div>
 
-        {/*  Price Info */}
-        <div className="text-lg text-amber-800 bg-white border-l-4 border-amber-600 p-4 rounded shadow-md">
-          <span className="font-semibold">Price:</span>{" "}
-          {food.pricePerServing ? (
-            <span>${(food.pricePerServing / 100).toFixed(2)} per serving</span>
-          ) : (
-            "N/A"
-          )}
-        </div>
+        {/* Price Info */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-[#111] border border-white/5 p-6 shadow-xl flex items-center gap-4"
+        >
+          <DollarSign className="w-8 h-8 text-[#d4af37]" />
+          <div>
+            <span className="text-gray-400 text-sm uppercase tracking-wider block">Price per serving</span>
+            {food.pricePerServing ? (
+              <span className="text-[#d4af37] text-2xl font-bold">
+                ${(food.pricePerServing / 100).toFixed(2)}
+              </span>
+            ) : (
+              <span className="text-gray-500">N/A</span>
+            )}
+          </div>
+        </motion.div>
 
-        {/*  Ingredients */}
+        {/* Ingredients */}
         {food.extendedIngredients && (
           <IngredientList ingredients={food.extendedIngredients} />
         )}
-        {/*  Instructions */}
-        <div className=" bg-amber-50 p-6 rounded-lg shadow-lg border-l-4 border-amber-600">
-          <h2 className="text-3xl font-semibold text-amber-800 mb-4">
+
+        {/* Instructions */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-[#111] p-8 border border-white/5 shadow-xl"
+        >
+          <h2 className="text-4xl font-bold text-[#d4af37] mb-8 font-serif tracking-tight">
             Instructions
           </h2>
           {food.analyzedInstructions?.[0]?.steps?.length > 0 ? (
-            <div className="space-y-6 ml-2 mr-4">
+            <div className="space-y-6">
               {food.analyzedInstructions[0].steps.map((step, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className="p-4 bg-white border-l-4 border-amber-400 rounded shadow-sm"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="p-6 bg-[#0a0a0a] border-l-2 border-[#d4af37] relative"
                 >
-                  <p className="text-amber-700 font-medium">
-                    Step {i + 1} :{" "}
-                    <span className="text-amber-900">{step.step}</span>
+                  <div className="absolute -left-8 top-6 w-12 h-12 bg-[#d4af37] rounded-full flex items-center justify-center text-black font-bold">
+                    {i + 1}
+                  </div>
+                  <p className="text-gray-300 text-lg leading-relaxed ml-8">
+                    {step.step}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           ) : (
-            <p className="text-amber-600">No instructions available.</p>
+            <p className="text-gray-500">No instructions available.</p>
           )}
-        </div>
+        </motion.div>
 
         <CommentBox foodID={foodID} />
       </div>

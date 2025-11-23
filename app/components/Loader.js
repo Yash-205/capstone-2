@@ -27,14 +27,14 @@ const Loader = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-amber-50 px-4 text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] px-4 text-center">
       <Lottie
         animationData={animationData}
         loop
         autoplay
         className="w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-80 lg:h-80"
       />
-      <p className="mt-6 text-lg sm:text-xl text-amber-800 max-w-lg font-medium">
+      <p className="mt-6 text-lg sm:text-xl text-[#d4af37] max-w-lg font-light tracking-wide">
         {randomFact}
       </p>
     </div>

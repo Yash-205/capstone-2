@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import FoodDetail from '../components/FoodDetail'; // adjust if needed
 import Loader from '../components/Loader'; // import your full-page loader
 
-const API_Key = "cabd2858df4e41159380a077065b6b27";
+const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
 
 const RandomRecipePage = () => {
   const [randomID, setRandomID] = useState(null);

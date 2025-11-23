@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Settings, ShoppingCart, Heart, Trash2, Save, LogOut, User } from "lucide-react";
+import Image from "next/image";
 import Loader from "../components/Loader";
 import { useAuth } from "../context/AuthContext";
-import Image from "next/image";
-//fixed
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const diets = [
   "Gluten Free",
@@ -28,6 +30,7 @@ export default function DashboardPage() {
   const [shoppingList, setShoppingList] = useState([]);
   const router = useRouter();
   const [favorites, setFavorites] = useState([]);
+  const [activeTab, setActiveTab] = useState("favorites");
 
   const fetchShoppingList = async () => {
     try {
@@ -42,12 +45,28 @@ export default function DashboardPage() {
     }
   };
 
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/favorites`, {
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch favorites");
+
+      const data = await res.json();
+      setFavorites(Array.isArray(data) ? data : data.favorites || []);
+    } catch (err) {
+      console.error("[FETCH_FAVORITES_ERROR]", err);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       router.push("/login");
     } else {
       setDiet(user.dietPreference || "");
       fetchShoppingList();
+      fetchFavorites();
     }
   }, [user, router]);
 
@@ -80,182 +99,239 @@ export default function DashboardPage() {
       if (!res.ok) throw new Error("Delete failed");
 
       setShoppingList((prev) => prev.filter((i) => i !== item));
-      alert(`🗑️ Removed ${item} from shopping list`);
     } catch (err) {
       alert("❌ Failed to delete item");
       console.error("[DELETE_ITEM ERROR]", err);
     }
   };
 
+  const removeFavorite = async (id) => {
+    try {
+      const res = await fetch(
+        `${API_BASE_URL}/api/favorites/remove`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ id }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to remove favorite");
+
+      setFavorites((prev) => prev.filter((f) => f.id !== id));
+    } catch (err) {
+      console.error("[REMOVE_FAVORITE_ERROR]", err);
+      alert("❌ Failed to remove favorite");
+    }
+  };
+
   if (!user) return <Loader />;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
       {/* Hero Section */}
       <section
-        className="min-h-[60vh] flex flex-col items-center justify-center bg-cover bg-center relative"
+        className="relative h-[40vh] flex flex-col items-center justify-center bg-cover bg-center"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('/chicken-larb-plate-with-dried-chilies-tomatoes-spring-onions-lettuce.jpg')",
+          backgroundImage: "url('/photo2.jpg')",
         }}
       >
-        <div className="flex-grow flex flex-col items-center justify-center px-4">
-          <div className="p-6 max-w-xl w-full text-center bg-black/40 rounded-xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
-              Welcome, {user.name} 👋
-            </h1>
-            <p className="text-white mt-2 text-lg">{user.email}</p>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#0a0a0a]"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10 text-center px-4"
+        >
+          <div className="w-24 h-24 mx-auto bg-[#d4af37] rounded-full flex items-center justify-center mb-6 shadow-lg shadow-[#d4af37]/20">
+            <User className="w-12 h-12 text-black" />
           </div>
-        </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-white font-serif tracking-tight mb-2">
+            Welcome, {user.name}
+          </h1>
+          <p className="text-gray-400 text-lg">{user.email}</p>
+        </motion.div>
       </section>
 
-      {/* Content Section */}
-      <div className="w-full bg-amber-50 py-10 px-6 space-y-10">
-        {/* 🍽️ Diet Section */}
-        <div className="bg-white p-6 rounded shadow border-l-4 border-amber-600">
-          <h2 className="text-2xl font-semibold text-amber-800 mb-4">
-            Dietary Preference
-          </h2>
-          {user.dietPreference && (
-            <p className="text-green-700 mb-3">
-              Current Preference: <strong>{user.dietPreference}</strong>
-            </p>
-          )}
-          <select
-            value={diet}
-            onChange={(e) => setDiet(e.target.value)}
-            className="border p-2 rounded w-full mb-4"
-          >
-            <option value="">No Diet Preference</option>
-            {diets.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={updateDiet}
-            className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700"
-          >
-            Save Preference
-          </button>
+      {/* Dashboard Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        {/* Tabs */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {[
+            { id: 'favorites', label: 'Favorites', icon: Heart },
+            { id: 'shopping', label: 'Shopping List', icon: ShoppingCart },
+            { id: 'settings', label: 'Preferences', icon: Settings },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 ${
+                activeTab === tab.id
+                  ? "bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20"
+                  : "bg-[#111] text-gray-400 border border-white/10 hover:border-[#d4af37] hover:text-[#d4af37]"
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* 🛒 Shopping List */}
-        <div className="bg-white p-6 rounded shadow border-l-4 border-amber-600">
-          <h2 className="text-2xl font-semibold text-amber-800 mb-4">
-            🛒 Shopping List
-          </h2>
-          {shoppingList.length > 0 ? (
-            <ul className="space-y-3">
-              {shoppingList.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="flex justify-between items-center bg-amber-50 p-3 rounded shadow border"
-                >
-                  <span className="text-amber-900">{item}</span>
-                  <button
-                    onClick={() => handleDeleteItem(item)}
-                    className="bg-red-500 text-white text-sm px-3 py-1 rounded hover:bg-red-600"
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          {/* Favorites Tab */}
+          {activeTab === 'favorites' && (
+            <div className="space-y-8">
+              <div className="flex items-center justify-between border-b border-white/10 pb-6">
+                <h2 className="text-3xl font-bold text-white font-serif">My Favorites</h2>
+                <span className="text-[#d4af37] font-medium">{favorites.length} Recipes</span>
+              </div>
+              
+              {favorites.length === 0 ? (
+                <div className="text-center py-20 bg-[#111] border border-white/5 rounded-lg">
+                  <Heart className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400 text-lg">No favorite recipes yet.</p>
+                  <button 
+                    onClick={() => router.push('/')}
+                    className="mt-6 text-[#d4af37] hover:text-white underline transition-colors"
                   >
-                    Delete
+                    Discover Recipes
                   </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray-600">
-              No items in your shopping list.
-            </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {favorites.map((fav, index) => (
+                    <motion.div
+                      key={fav.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="group bg-[#111] border border-white/5 overflow-hidden hover:border-[#d4af37]/50 transition-all duration-300"
+                    >
+                      <div className="relative h-48 overflow-hidden">
+                        {fav.image && (
+                          <Image
+                            src={fav.image}
+                            alt={fav.title}
+                            fill
+                            className="object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <button
+                          onClick={() => removeFavorite(fav.id)}
+                          className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-red-500/80 rounded-full text-white transition-colors backdrop-blur-sm"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-serif text-white mb-4 line-clamp-2 group-hover:text-[#d4af37] transition-colors">
+                          {fav.title}
+                        </h3>
+                        <button
+                          onClick={() => router.push(`/recipie/${fav.id}`)}
+                          className="w-full py-3 border border-white/10 text-gray-300 text-sm uppercase tracking-widest hover:bg-[#d4af37] hover:text-black hover:border-[#d4af37] transition-all"
+                        >
+                          View Recipe
+                        </button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
-        </div>
 
-        {/* ❤️ Favorites */}
-        <div className="bg-white p-6 rounded shadow border-l-4 border-amber-600">
-          <h2 className="text-2xl font-semibold text-amber-800 mb-4">
-            ❤️ Favorites
-          </h2>
+          {/* Shopping List Tab */}
+          {activeTab === 'shopping' && (
+            <div className="max-w-3xl mx-auto">
+              <div className="bg-[#111] border border-white/10 p-8 rounded-lg">
+                <h2 className="text-3xl font-bold text-white font-serif mb-8 border-b border-white/10 pb-4">
+                  Shopping List
+                </h2>
+                {shoppingList.length > 0 ? (
+                  <ul className="space-y-4">
+                    {shoppingList.map((item, idx) => (
+                      <motion.li
+                        key={idx}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className="flex justify-between items-center bg-[#0a0a0a] p-4 border border-white/5 hover:border-[#d4af37]/30 transition-colors group"
+                      >
+                        <span className="text-gray-300 group-hover:text-white transition-colors">{item}</span>
+                        <button
+                          onClick={() => handleDeleteItem(item)}
+                          className="text-gray-500 hover:text-red-500 transition-colors p-2"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </motion.li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-center py-12">
+                    <ShoppingCart className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                    <p className="text-gray-400">Your shopping list is empty.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
-          {/* Show Favorites Button */}
-          <button
-            onClick={async () => {
-              try {
-                const res = await fetch(`${API_BASE_URL}/api/favorites`, {
-                  credentials: "include", // ✅ sends cookies (needed for protect middleware)
-                });
-
-                if (!res.ok) throw new Error("Failed to fetch favorites");
-
-                const data = await res.json();
-                setFavorites(Array.isArray(data) ? data : data.favorites || []);
-              } catch (err) {
-                console.error("[FETCH_FAVORITES_ERROR]", err);
-                alert("❌ Failed to load favorites");
-              }
-            }}
-            className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 mb-4"
-          >
-            Show Favorites
-          </button>
-
-          {/* Favorites List */}
-          {favorites.length === 0 ? (
-            <p className="text-gray-500">No favorites yet.</p>
-          ) : (
-            <ul className="space-y-4">
-              {favorites.map((fav) => (
-                <li
-                  key={fav.id}
-                  className="flex items-center justify-between bg-amber-50 p-3 rounded shadow-sm"
-                >
-                  <div className="flex items-center gap-3">
-                    {fav.image && (
-                      <Image
-                        src={fav.image}
-                        alt={fav.title}
-                        width={64}
-                        height={64}
-                        className="rounded object-cover"
-                      />
-                    )}
-                    <span className="font-medium text-amber-900">
-                      {fav.title}
-                    </span>
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-[#111] border border-white/10 p-8 rounded-lg">
+                <h2 className="text-3xl font-bold text-white font-serif mb-8 border-b border-white/10 pb-4">
+                  Preferences
+                </h2>
+                
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-[#d4af37] text-sm font-bold uppercase tracking-wider mb-4">
+                      Dietary Preference
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={diet}
+                        onChange={(e) => setDiet(e.target.value)}
+                        className="w-full bg-[#0a0a0a] border border-white/10 text-white px-4 py-3 appearance-none focus:outline-none focus:border-[#d4af37] transition-colors"
+                      >
+                        <option value="">No Diet Preference</option>
+                        {diets.map((d) => (
+                          <option key={d} value={d}>
+                            {d}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
 
                   <button
-                    onClick={async () => {
-                      try {
-                        const res = await fetch(
-                          `${API_BASE_URL}/api/favorites/remove`,
-                          {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            credentials: "include", // ✅ send cookies again
-                            body: JSON.stringify({ id: fav.id }),
-                          }
-                        );
-
-                        if (!res.ok)
-                          throw new Error("Failed to remove favorite");
-
-                        setFavorites((prev) =>
-                          prev.filter((f) => f.id !== fav.id)
-                        );
-                      } catch (err) {
-                        console.error("[REMOVE_FAVORITE_ERROR]", err);
-                        alert("❌ Failed to remove favorite");
-                      }
-                    }}
-                    className="text-red-500 hover:text-red-700"
+                    onClick={updateDiet}
+                    className="w-full py-4 bg-[#d4af37] text-black font-bold uppercase tracking-widest hover:bg-[#f1c40f] transition-colors flex items-center justify-center gap-2"
                   >
-                    ❌
+                    <Save className="w-5 h-5" />
+                    Save Changes
                   </button>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+            </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

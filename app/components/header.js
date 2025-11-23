@@ -32,63 +32,63 @@ const Header = () => {
   const navLinks = ["Home", "Random", "Videos"];
 
   const commonLinkClass =
-    "text-white transition-transform transform duration-200 hover:text-amber-600 hover:scale-110 font-medium";
+    "text-white transition-all duration-300 hover:text-[#d4af37] hover:scale-105 font-medium tracking-wide";
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-100 ${
-          scrolled ? "bg-amber-400/95 shadow-md" : "bg-transparent"
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          scrolled ? "bg-black/90 backdrop-blur-sm" : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
           <Link
             href="/"
-            className="text-3xl font-extrabold tracking-wide text-white hover:text-amber-600 transition-transform transform hover:scale-110"
+            className="text-3xl font-bold tracking-widest text-white hover:text-[#d4af37] transition-colors duration-300 font-serif"
           >
-            Recipe Finder
+            RECIPE FINDER
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex space-x-6 items-center">
+          <nav className="hidden lg:flex space-x-8 items-center">
             {navLinks.map((text) => (
               <Link
                 key={text}
                 href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
                 className={commonLinkClass}
               >
-                {text}
+                {text.toUpperCase()}
               </Link>
             ))}
 
             {user ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-6">
                 <button
                   onClick={handleLogout}
-                  className={`${commonLinkClass} bg-transparent border-none`}
+                  className={`${commonLinkClass} bg-transparent border-none uppercase`}
                 >
-                  Logout
+                  LOGOUT
                 </button>
-                <Link href="/dashboard" className={`${commonLinkClass}`}>
-                  Welcome, {user.name.split(" ")[0]}
+                <Link href="/dashboard" className={`${commonLinkClass} uppercase`}>
+                  WELCOME, {user.name.split(" ")[0].toUpperCase()}
                 </Link>
               </div>
             ) : (
-              <>
+              <div className="flex items-center space-x-6">
                 <Link href="/login" className={commonLinkClass}>
-                  Login
+                  LOGIN
                 </Link>
-                <Link href="/signup" className={commonLinkClass}>
-                  Sign Up
+                <Link href="/signup" className={`px-6 py-2 border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 rounded-none uppercase tracking-wider font-medium`}>
+                  SIGN UP
                 </Link>
-              </>
+              </div>
             )}
           </nav>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden text-white focus:outline-none"
+            className="lg:hidden text-white hover:text-[#d4af37] transition-colors focus:outline-none"
           >
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -98,17 +98,15 @@ const Header = () => {
       {/* Mobile Drawer */}
       {isOpen && (
         <div
-          className={`lg:hidden fixed top-[72px] left-0 w-full z-40 px-6 pb-4 pt-4 transition-all duration-100 ${
-            scrolled ? "bg-amber-400/95" : "bg-transparent"
-          }`}
+          className={`lg:hidden fixed top-[88px] left-0 w-full z-40 px-6 pb-8 pt-4 transition-all duration-300 bg-black/95 border-b border-white/10 backdrop-blur-md`}
         >
-          <ul className="space-y-4">
+          <ul className="space-y-6 text-center">
             {navLinks.map((text) => (
               <li key={text}>
                 <Link
                   href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className={`${commonLinkClass} block text-lg`}
+                  className={`${commonLinkClass} block text-xl uppercase`}
                 >
                   {text}
                 </Link>
@@ -123,42 +121,38 @@ const Header = () => {
                       handleLogout();
                       setIsOpen(false);
                     }}
-                    className={`${commonLinkClass} block text-left w-full`}
+                    className={`${commonLinkClass} block w-full text-xl uppercase`}
                   >
-                    Logout
+                    LOGOUT
                   </button>
                 </li>
                 <li>
                   <Link
                     href="/dashboard"
                     onClick={() => setIsOpen(false)}
-                    className={`${commonLinkClass} block text-lg`}
+                    className={`${commonLinkClass} block text-xl uppercase`}
                   >
-                    Welcome, {user.name.split(" ")[0]}
+                    WELCOME, {user.name.split(" ")[0]}
                   </Link>
                 </li>
               </>
             ) : (
-              <>
-                <li>
-                  <Link
-                    href="/login"
-                    onClick={() => setIsOpen(false)}
-                    className={`${commonLinkClass} block text-lg`}
-                  >
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/signup"
-                    onClick={() => setIsOpen(false)}
-                    className={`${commonLinkClass} block text-lg`}
-                  >
-                    Sign Up
-                  </Link>
-                </li>
-              </>
+              <div className="flex flex-col space-y-4 mt-8">
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className={`${commonLinkClass} block text-xl uppercase`}
+                >
+                  LOGIN
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setIsOpen(false)}
+                  className={`inline-block mx-auto px-8 py-3 border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 uppercase tracking-wider font-medium`}
+                >
+                  SIGN UP
+                </Link>
+              </div>
             )}
           </ul>
         </div>
