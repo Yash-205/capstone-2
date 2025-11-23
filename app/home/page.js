@@ -87,25 +87,25 @@ export default function Home() {
         
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
           <div className="max-w-4xl animate-fade-in-up">
-            <h2 className="text-7xl md:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
               CULINARY <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#f1c40f]">EXCELLENCE</span>
             </h2>
-            <p className="md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-12 border-l-2 border-[#d4af37] pl-6">
+            <p className="text-lg md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-12 border-l-2 border-[#d4af37] pl-6">
               Discover the art of cooking with our curated collection of exquisite recipes for the modern epicurean.
             </p>
             
-            <div className="flex items-center gap-0 w-full max-w-2xl bg-[#0a0a0a] border border-[#d4af37] p-2 shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-300 hover:shadow-[0_0_70px_rgba(212,175,55,0.25)] transform hover:-translate-y-1">
+            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-0 w-full max-w-2xl bg-transparent md:bg-[#0a0a0a] md:border md:border-[#d4af37] md:p-2 md:shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-300 md:hover:shadow-[0_0_70px_rgba(212,175,55,0.25)] transform md:hover:-translate-y-1">
               <input
                 value={dish}
                 onChange={(e) => setDish(e.target.value)}
                 type="text"
                 placeholder="Search for recipes..."
-                className="flex-grow bg-transparent text-white placeholder-gray-500 focus:outline-none text-xl px-6 py-4 font-light tracking-wide"
+                className="flex-grow bg-[#0a0a0a] md:bg-transparent border border-[#d4af37] md:border-none text-white placeholder-gray-500 focus:outline-none text-lg md:text-xl px-6 py-4 font-light tracking-wide mb-2 md:mb-0"
               />
               <button
                 onClick={handleSearch}
-                className="px-8 py-4 bg-[#d4af37] text-black font-bold tracking-widest hover:bg-[#f1c40f] transition-all duration-300 uppercase text-sm"
+                className="px-8 py-4 bg-[#d4af37] text-black font-bold tracking-widest hover:bg-[#f1c40f] transition-all duration-300 uppercase text-sm w-full md:w-auto"
               >
                 SEARCH
               </button>
@@ -161,7 +161,7 @@ export default function Home() {
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.5 } }
                   }}
-                  className="text-4xl md:text-5xl font-bold text-white text-center font-serif tracking-tight leading-tight"
+                  className="text-3xl md:text-5xl font-bold text-white text-center font-serif tracking-tight leading-tight"
                 >
                   {section.title}
                 </motion.h2>

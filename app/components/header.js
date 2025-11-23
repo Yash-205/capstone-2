@@ -90,72 +90,102 @@ const Header = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden text-white hover:text-[#d4af37] transition-colors focus:outline-none"
           >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </header>
 
       {/* Mobile Drawer */}
-      {isOpen && (
-        <div
-          className={`lg:hidden fixed top-[88px] left-0 w-full z-40 px-6 pb-8 pt-4 transition-all duration-300 bg-black/95 border-b border-white/10 backdrop-blur-md`}
-        >
-          <ul className="space-y-6 text-center">
+      <div
+        className={`lg:hidden fixed top-0 left-0 h-full w-80 bg-[#0a0a0a] z-50 transform transition-transform duration-300 ease-in-out shadow-2xl border-r border-[#d4af37] ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col h-full p-8 relative">
+          {/* Close Button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-6 right-6 text-gray-400 hover:text-[#d4af37] transition-colors"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Logo in Drawer */}
+          <div className="mb-12 mt-4">
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
+              className="text-2xl font-bold tracking-widest text-white font-serif"
+            >
+              RECIPE FINDER
+            </Link>
+            <div className="h-[2px] w-12 bg-[#d4af37] mt-4"></div>
+          </div>
+
+          {/* Navigation Links */}
+          <ul className="space-y-6">
             {navLinks.map((text) => (
               <li key={text}>
                 <Link
                   href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
                   onClick={() => setIsOpen(false)}
-                  className={`${commonLinkClass} block text-xl uppercase`}
+                  className="block text-lg font-medium text-gray-300 hover:text-[#d4af37] hover:pl-2 transition-all duration-300 uppercase tracking-wide border-l-2 border-transparent hover:border-[#d4af37]"
                 >
                   {text}
                 </Link>
               </li>
             ))}
+          </ul>
 
+          {/* Auth Links */}
+          <div className="mt-auto pt-8 border-t border-white/10">
             {user ? (
-              <>
-                <li>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsOpen(false);
-                    }}
-                    className={`${commonLinkClass} block w-full text-xl uppercase`}
-                  >
-                    LOGOUT
-                  </button>
-                </li>
-                <li>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className={`${commonLinkClass} block text-xl uppercase`}
-                  >
-                    WELCOME, {user.name.split(" ")[0]}
-                  </Link>
-                </li>
-              </>
+              <div className="space-y-4">
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="block text-lg font-medium text-[#d4af37] hover:text-white transition-colors uppercase tracking-wide"
+                >
+                  Hi, {user.name.split(" ")[0]}
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full py-3 border border-white/20 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition-all duration-300 uppercase tracking-wider text-sm font-bold"
+                >
+                  LOGOUT
+                </button>
+              </div>
             ) : (
-              <div className="flex flex-col space-y-4 mt-8">
+              <div className="space-y-4">
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className={`${commonLinkClass} block text-xl uppercase`}
+                  className="block w-full py-3 text-center border border-white/20 text-gray-300 hover:border-[#d4af37] hover:text-[#d4af37] transition-all duration-300 uppercase tracking-wider text-sm font-bold"
                 >
                   LOGIN
                 </Link>
                 <Link
                   href="/signup"
                   onClick={() => setIsOpen(false)}
-                  className={`inline-block mx-auto px-8 py-3 border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 uppercase tracking-wider font-medium`}
+                  className="block w-full py-3 text-center bg-[#d4af37] text-black hover:bg-[#f1c40f] transition-all duration-300 uppercase tracking-wider text-sm font-bold"
                 >
                   SIGN UP
                 </Link>
               </div>
             )}
-          </ul>
+          </div>
         </div>
+      </div>
+
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-opacity duration-300"
+          onClick={() => setIsOpen(false)}
+        />
       )}
     </>
   );
