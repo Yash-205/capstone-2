@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -17,7 +18,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://capstone-2-3-hmts.onrender.com/api/auth/logout", {
+      await fetch(`${API_BASE_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

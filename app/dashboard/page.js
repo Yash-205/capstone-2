@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Loader";
 import { useAuth } from "../context/AuthContext";
+import Image from "next/image";
 //fixed
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const diets = [
   "Gluten Free",
   "Ketogenic",
@@ -17,7 +19,7 @@ const diets = [
   "Primal",
   "Low FODMAP",
   "Whole30",
-  ""
+  "",
 ];
 
 export default function DashboardPage() {
@@ -25,13 +27,13 @@ export default function DashboardPage() {
   const [diet, setDiet] = useState("");
   const [shoppingList, setShoppingList] = useState([]);
   const router = useRouter();
+  const [favorites, setFavorites] = useState([]);
 
   const fetchShoppingList = async () => {
     try {
-      const listRes = await fetch(
-        "https://capstone-2-3-hmts.onrender.com/api/shopping-list",
-        { credentials: "include" }
-      );
+      const listRes = await fetch(`${API_BASE_URL}/api/shopping-list`, {
+        credentials: "include",
+      });
       if (!listRes.ok) throw new Error("Failed to fetch shopping list");
       const listData = await listRes.json();
       setShoppingList(listData.shoppingList || []);
@@ -47,19 +49,16 @@ export default function DashboardPage() {
       setDiet(user.dietPreference || "");
       fetchShoppingList();
     }
-  }, [user]);
+  }, [user, router]);
 
   const updateDiet = async () => {
     try {
-      const res = await fetch(
-        "https://capstone-2-3-hmts.onrender.com/api/auth/diet",
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ dietPreference: diet }),
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/auth/diet`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ dietPreference: diet }),
+      });
 
       if (!res.ok) throw new Error("Update failed");
       alert("✅ Diet preference updated!");
@@ -71,15 +70,12 @@ export default function DashboardPage() {
 
   const handleDeleteItem = async (item) => {
     try {
-      const res = await fetch(
-        "https://capstone-2-3-hmts.onrender.com/api/shopping-list",
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ item }),
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/shopping-list`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ item }),
+      });
 
       if (!res.ok) throw new Error("Delete failed");
 
@@ -171,6 +167,93 @@ export default function DashboardPage() {
             <p className="text-sm text-gray-600">
               No items in your shopping list.
             </p>
+          )}
+        </div>
+
+        {/* ❤️ Favorites */}
+        <div className="bg-white p-6 rounded shadow border-l-4 border-amber-600">
+          <h2 className="text-2xl font-semibold text-amber-800 mb-4">
+            ❤️ Favorites
+          </h2>
+
+          {/* Show Favorites Button */}
+          <button
+            onClick={async () => {
+              try {
+                const res = await fetch(`${API_BASE_URL}/api/favorites`, {
+                  credentials: "include", // ✅ sends cookies (needed for protect middleware)
+                });
+
+                if (!res.ok) throw new Error("Failed to fetch favorites");
+
+                const data = await res.json();
+                setFavorites(Array.isArray(data) ? data : data.favorites || []);
+              } catch (err) {
+                console.error("[FETCH_FAVORITES_ERROR]", err);
+                alert("❌ Failed to load favorites");
+              }
+            }}
+            className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 mb-4"
+          >
+            Show Favorites
+          </button>
+
+          {/* Favorites List */}
+          {favorites.length === 0 ? (
+            <p className="text-gray-500">No favorites yet.</p>
+          ) : (
+            <ul className="space-y-4">
+              {favorites.map((fav) => (
+                <li
+                  key={fav.id}
+                  className="flex items-center justify-between bg-amber-50 p-3 rounded shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    {fav.image && (
+                      <Image
+                        src={fav.image}
+                        alt={fav.title}
+                        width={64}
+                        height={64}
+                        className="rounded object-cover"
+                      />
+                    )}
+                    <span className="font-medium text-amber-900">
+                      {fav.title}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await fetch(
+                          `${API_BASE_URL}/api/favorites/remove`,
+                          {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: "include", // ✅ send cookies again
+                            body: JSON.stringify({ id: fav.id }),
+                          }
+                        );
+
+                        if (!res.ok)
+                          throw new Error("Failed to remove favorite");
+
+                        setFavorites((prev) =>
+                          prev.filter((f) => f.id !== fav.id)
+                        );
+                      } catch (err) {
+                        console.error("[REMOVE_FAVORITE_ERROR]", err);
+                        alert("❌ Failed to remove favorite");
+                      }
+                    }}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    ❌
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>

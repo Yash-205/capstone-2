@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import IngredientList from "./IngredientList";
-import Loader from "./Loader"; 
-import CommentBox from './CommentBox';
+import Loader from "./Loader";
+import CommentBox from "./CommentBox";
 const FoodDetail = ({ foodID }) => {
   const [food, setFood] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +16,9 @@ const FoodDetail = ({ foodID }) => {
     const fetchRecipe = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`https://api.spoonacular.com/recipes/${foodID}/information?apiKey=${API_Key}`);
+        const res = await fetch(
+          `https://api.spoonacular.com/recipes/${foodID}/information?apiKey=${API_Key}`
+        );
         if (!res.ok) throw new Error("Failed to fetch data");
         const data = await res.json();
         setFood(data);
@@ -36,9 +38,7 @@ const FoodDetail = ({ foodID }) => {
   }
 
   if (isLoading) {
-    return (
-        <Loader />
-    );
+    return <Loader />;
   }
 
   return (
@@ -62,18 +62,50 @@ const FoodDetail = ({ foodID }) => {
         {/* Summary */}
         {food.summary && (
           <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-amber-600">
-            <h2 className="text-3xl font-semibold text-amber-800 mb-4">Description</h2>
+            <h2 className="text-3xl font-semibold text-amber-800 mb-4">
+              Description
+            </h2>
             <div
               className="text-amber-900 text-base space-y-2 leading-relaxed"
               dangerouslySetInnerHTML={{ __html: food.summary }}
             />
           </div>
         )}
+        {/* Add to Favorites Button */}
+        <button
+          onClick={async () => {
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/favorites`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    id: food.id,
+                    title: food.title,
+                    image: food.image,
+                  }),
+                }
+              );
+              const data = await res.json();
+              if (!res.ok) throw new Error(data.msg || "Failed");
+              alert("❤️ Added to favorites!");
+            } catch (err) {
+              alert("❌ " + err.message);
+            }
+          }}
+          className="bg-amber-600 text-white px-6 py-3 rounded hover:bg-amber-700 mt-4"
+        >
+          ❤️ Add to Favorites
+        </button>
 
         {/* Meta Info */}
         <div
           className={`grid gap-4 text-amber-800 ${
-            food.vegan ? "grid-cols-2 md:grid-cols-4" : "grid-cols-2 md:grid-cols-3"
+            food.vegan
+              ? "grid-cols-2 md:grid-cols-4"
+              : "grid-cols-2 md:grid-cols-3"
           }`}
         >
           <div className="bg-white shadow-md p-4 rounded border-l-4 border-amber-600 font-medium">
@@ -106,10 +138,11 @@ const FoodDetail = ({ foodID }) => {
         {food.extendedIngredients && (
           <IngredientList ingredients={food.extendedIngredients} />
         )}
-
         {/*  Instructions */}
         <div className=" bg-amber-50 p-6 rounded-lg shadow-lg border-l-4 border-amber-600">
-          <h2 className="text-3xl font-semibold text-amber-800 mb-4">Instructions</h2>
+          <h2 className="text-3xl font-semibold text-amber-800 mb-4">
+            Instructions
+          </h2>
           {food.analyzedInstructions?.[0]?.steps?.length > 0 ? (
             <div className="space-y-6 ml-2 mr-4">
               {food.analyzedInstructions[0].steps.map((step, i) => (

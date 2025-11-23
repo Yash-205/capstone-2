@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 
 const API_Key = "cabd2858df4e41159380a077065b6b27";
-
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const IngredientList = ({ ingredients }) => {
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [substitutes, setSubstitutes] = useState([]);
@@ -22,7 +22,7 @@ const IngredientList = ({ ingredients }) => {
     const fetchShoppingList = async () => {
       if (!user) return;
       try {
-        const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
+        const res = await fetch(`${API_BASE_URL}/api/shopping-list`, {
           method: "GET",
           credentials: "include",
         });
@@ -76,7 +76,7 @@ const IngredientList = ({ ingredients }) => {
     }
 
     try {
-      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
+      const res = await fetch(`${API_BASE_URL}/api/shopping-list`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -95,7 +95,7 @@ const IngredientList = ({ ingredients }) => {
 
   const handleDeleteFromList = async (ingredientName) => {
     try {
-      const res = await fetch("https://capstone-2-3-hmts.onrender.com/api/shopping-list", {
+      const res = await fetch(`${API_BASE_URL}/api/shopping-list`, {
         method: "DELETE",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

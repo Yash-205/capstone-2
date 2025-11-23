@@ -2,13 +2,13 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 
 const AuthContext = createContext();
-
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const checkAuth = async () => {
     try {
-      const res = await fetch('https://capstone-2-3-hmts.onrender.com/api/auth/me', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
         credentials: 'include', // required to send cookies
       });
 

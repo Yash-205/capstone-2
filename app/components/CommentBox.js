@@ -8,10 +8,15 @@ const CommentBox = ({ foodID }) => {
   const [text, setText] = useState("");
   const [isPosting, setIsPosting] = useState(false);
 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const fetchComments = async () => {
-    const res = await fetch(`https://capstone-2-3-hmts.onrender.com/api/comments/${foodID}`, {
-      credentials: "include",
-    });
+    const res = await fetch(
+      `${API_BASE_URL}/api/comments/${foodID}`,
+      {
+        credentials: "include",
+      }
+    );
     const data = await res.json();
     setComments(data);
   };
@@ -20,9 +25,9 @@ const CommentBox = ({ foodID }) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    setIsPosting(true); 
+    setIsPosting(true);
     try {
-      await fetch("https://capstone-2-3-hmts.onrender.com/api/comments", {
+      await fetch(`${API_BASE_URL}/api/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -34,7 +39,7 @@ const CommentBox = ({ foodID }) => {
     } catch (error) {
       console.error("Error posting comment:", error);
     } finally {
-      setIsPosting(false); 
+      setIsPosting(false);
     }
   };
 
