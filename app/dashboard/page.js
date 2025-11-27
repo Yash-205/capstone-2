@@ -107,22 +107,18 @@ export default function DashboardPage() {
 
   const removeFavorite = async (id) => {
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/favorites/remove`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ id }),
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/favorites`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ id }),
+      });
 
       if (!res.ok) throw new Error("Failed to remove favorite");
 
-      setFavorites((prev) => prev.filter((f) => f.id !== id));
+      setFavorites(prev => prev.filter(f => f.id !== id));
     } catch (err) {
       console.error("[REMOVE_FAVORITE_ERROR]", err);
-      alert("❌ Failed to remove favorite");
     }
   };
 
@@ -138,8 +134,8 @@ export default function DashboardPage() {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#0a0a0a]"></div>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -167,11 +163,10 @@ export default function DashboardPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center justify-center gap-2 px-4 py-3 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-300 w-full sm:w-auto ${
-                activeTab === tab.id
+              className={`flex items-center justify-center gap-2 px-4 py-3 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-300 w-full sm:w-auto ${activeTab === tab.id
                   ? "bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20"
                   : "bg-[#111] text-gray-400 border border-white/10 hover:border-[#d4af37] hover:text-[#d4af37]"
-              }`}
+                }`}
             >
               <tab.icon className="w-4 h-4" />
               {tab.label}
@@ -192,12 +187,12 @@ export default function DashboardPage() {
                 <h2 className="text-2xl md:text-3xl font-bold text-white font-serif">My Favorites</h2>
                 <span className="text-[#d4af37] font-medium text-sm md:text-base">{favorites.length} Recipes</span>
               </div>
-              
+
               {favorites.length === 0 ? (
                 <div className="text-center py-12 md:py-20 bg-[#111] border border-white/5 rounded-lg px-4">
                   <Heart className="w-12 h-12 md:w-16 md:h-16 text-gray-600 mx-auto mb-4" />
                   <p className="text-gray-400 text-base md:text-lg">No favorite recipes yet.</p>
-                  <button 
+                  <button
                     onClick={() => router.push('/')}
                     className="mt-4 md:mt-6 text-[#d4af37] hover:text-white underline transition-colors text-sm md:text-base"
                   >
@@ -293,7 +288,7 @@ export default function DashboardPage() {
                 <h2 className="text-2xl md:text-3xl font-bold text-white font-serif mb-6 md:mb-8 border-b border-white/10 pb-4">
                   Preferences
                 </h2>
-                
+
                 <div className="space-y-6">
                   <div>
                     <label className="block text-[#d4af37] text-xs md:text-sm font-bold uppercase tracking-wider mb-3 md:mb-4">

@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🥗 NutriPlate
 
-## Getting Started
+**Smart Recipe & Nutrition Management System**
 
-First, run the development server:
+> **Status**: 🚧 In Development / Midway
+
+**NutriPlate** is a smart web platform designed to help users discover, save, and manage recipes while tracking nutrition. It combines recipe discovery, calorie tracking, ingredient substitution, and plating suggestions to help users make smarter, healthier eating decisions.
+
+## 🌐 Live Demo
+
+| Component               | URL             |
+| ----------------------- | --------------- |
+| 🖥️ Frontend (Next.js) | [Live Demo](https://recipe-finder-orpin-pi.vercel.app/)   |
+| ⚙️ Backend (API)      | [API Link](https://capstone-2-3-hmts.onrender.com)   |
+| 🗄️ Database (MongoDB) | [MongoDB Atlas](#) |
+
+---
+
+## 🚀 Problem Statement
+
+Many people struggle to maintain balanced diets due to time limits and lack of personalized meal plans. Most recipe apps focus only on food ideas, not fitness goals.
+
+**NutriPlate** solves this by providing a unified solution for:
+
+* **Smart Recipe Discovery**: Finding recipes that match your health goals.
+* **Nutrition Tracking**: Monitoring calories and macros effortlessly.
+* **Personalization**: Tailoring suggestions to your dietary preferences.
+
+## 🏗️ System Architecture
+
+The application follows a modern **Client-Server** architecture:
+
+**Frontend → Backend (API) → Database**
+
+* **Frontend**: Next.js (App Router), Tailwind CSS
+* **Backend**: Node.js + Express
+* **Database**: MongoDB (NoSQL)
+* **Authentication**: JWT-based login/signup
+* **Hosting**: Vercel (Frontend), Render (Backend), MongoDB Atlas (Database)
+
+## ✨ Key Features
+
+| Category                     | Features                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| 🔐**Authentication**   | User registration, login, logout, and role-based access.                  |
+| 🍲**Recipe Finder**    | Browse and search for recipes (Integration with Spoonacular API planned). |
+| ❤️**Favorites**      | Save and manage preferred recipes for quick access.                       |
+| 🛒**Shopping List**    | Add ingredients directly from recipes to your personal shopping list.     |
+| 🥗**Calorie Tracking** | Track calories and nutritional information per recipe.                    |
+| 💬**Community**        | Comment on recipes and share tips.                                        |
+| 🔍**Advanced Search**  | Searching, sorting, and filtering based on dietary goals.                 |
+
+## 🧠 Tech Stack
+
+| Layer                      | Technologies                                |
+| -------------------------- | ------------------------------------------- |
+| **Frontend**         | Next.js 15, React 19, Tailwind CSS 4, Axios |
+| **Backend**          | Node.js, Express.js                         |
+| **Database**         | MongoDB, Mongoose                           |
+| **Authentication**   | JWT (JSON Web Tokens)                       |
+| **AI/External APIs** | OpenAI, Spoonacular (Planned)               |
+
+## 🔗 API Overview
+
+| Endpoint               | Method   | Description                      | Access        |
+| ---------------------- | -------- | -------------------------------- | ------------- |
+| `/api/auth/signup`   | POST     | Register a new user              | Public        |
+| `/api/auth/login`    | POST     | Authenticate user & return JWT   | Public        |
+| `/api/recipes`       | GET      | Get recipes based on goals       | Authenticated |
+| `/api/favorites`     | GET/POST | Manage favorite recipes          | Authenticated |
+| `/api/shopping-list` | GET/POST | Manage shopping list items       | Authenticated |
+| `/api/comments`      | POST     | Submit a new comment on a recipe | Authenticated |
+| `/api/users/:id`     | PUT      | Update user profile & goals      | Authenticated |
+
+---
+
+## ⚙️ Local Setup Guide
+
+Follow these steps to run **NutriPlate** locally.
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/capstone-2.git
+cd capstone-2
+```
+
+### 2️⃣ Backend Setup
+
+Navigate to the backend directory and install dependencies:
+
+```bash
+cd Backend
+npm install
+```
+
+Create a `.env` file in the `Backend` directory:
+
+```env
+PORT=8000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+```
+
+Start the backend server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3️⃣ Frontend Setup
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Open a new terminal, navigate to the root directory, and install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Ensure you are in the root directory 'capstone-2'
+npm install
+```
 
-## Learn More
+Create a `.env.local` file in the root directory:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Start the frontend development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*The app will run on http://localhost:3000*
