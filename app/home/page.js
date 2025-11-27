@@ -13,8 +13,6 @@ export default function Home() {
     breakfast: [],
     lunch: [],
     dinner: [],
-    snack: [],
-    dessert: [],
   });
   const [scrollingDown, setScrollingDown] = useState(true);
   const router = useRouter();
@@ -35,7 +33,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const categories = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert'];
+      const categories = ['breakfast', 'lunch', 'dinner'];
       const newRecipes = { ...recipes };
 
       try {
@@ -69,8 +67,6 @@ export default function Home() {
     { title: 'Start Your Day', category: 'breakfast', subtitle: 'Breakfast Delights' },
     { title: 'Midday Fuel', category: 'lunch', subtitle: 'Lunch Favorites' },
     { title: 'Evening Feast', category: 'dinner', subtitle: 'Dinner Specialties' },
-    { title: 'Quick Bites', category: 'snack', subtitle: 'Tasty Snacks' },
-    { title: 'Sweet Endings', category: 'dessert', subtitle: 'Decadent Desserts' },
   ];
 
   return (

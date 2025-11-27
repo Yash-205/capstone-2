@@ -9,7 +9,7 @@ const FoodItem = ({ food, index = 0 }) => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      className="group flex flex-col bg-[#111] border border-white/5 p-0 rounded-none shadow-xl transition-all duration-500 hover:shadow-[#d4af37]/20 hover:-translate-y-2"
+      className="group flex flex-col bg-[#111] border border-[#d4af37]/10 p-0 rounded-none shadow-xl transition-all duration-500 hover:shadow-[#d4af37]/20 hover:-translate-y-2"
     >
       <div className="relative overflow-hidden">
         <Image
@@ -17,7 +17,7 @@ const FoodItem = ({ food, index = 0 }) => {
           alt={food.title}
           width={312}
           height={231}
-          className="object-cover w-full h-64 transform transition-all duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+          className="object-cover w-full h-64 transform transition-all duration-700 group-hover:scale-110 grayscale-[0.5] group-hover:grayscale-0"
         />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500"></div>
       </div>

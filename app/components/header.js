@@ -44,7 +44,7 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
           <Link
             href="/"
-            className="text-3xl font-bold tracking-widest text-white hover:text-[#d4af37] transition-colors duration-300 font-serif"
+            className="text-xl md:text-3xl font-bold tracking-widest text-white hover:text-[#d4af37] transition-colors duration-300 font-serif"
           >
             RECIPE FINDER
           </Link>
@@ -97,18 +97,12 @@ const Header = () => {
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed top-0 left-0 h-full w-80 bg-[#0a0a0a] z-50 transform transition-transform duration-300 ease-in-out shadow-2xl border-r border-[#d4af37] ${
+        className={`lg:hidden fixed top-0 left-0 h-full w-80 max-w-[70%] bg-[#0a0a0a] z-50 transform transition-transform duration-300 ease-in-out shadow-2xl border-r border-[#d4af37] ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full p-8 relative">
-          {/* Close Button */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-6 right-6 text-gray-400 hover:text-[#d4af37] transition-colors"
-          >
-            <X size={24} />
-          </button>
+         
 
           {/* Logo in Drawer */}
           <div className="mb-12 mt-4">
