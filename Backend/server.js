@@ -11,26 +11,25 @@ import favoriteRoutes from './routes/favoriteRoutes.js';
 dotenv.config();
 connectDB();
 
-
-
-// Dynamic CORS origin matching
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (
-//       !origin || // allow mobile/postman
-//       origin.includes('localhost') ||
-//       origin.startsWith('https://recipe-finder') // matches all recipe-finder Vercel preview URLs
-//     ) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS: ' + origin));
-//     }
-//   },
-//   credentials: true,
-// };
 const app = express();
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
+// // Dynamic CORS origin matching
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (
+      !origin || // allow mobile/postman
+      origin.includes('localhost') ||
+      origin.startsWith('https://recipe-finder') // matches all recipe-finder Vercel preview URLs
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 // app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
