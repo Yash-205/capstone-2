@@ -13,7 +13,6 @@ const FoodDetail = ({ foodID }) => {
   const [error, setError] = useState(null);
 
 
-
   useEffect(() => {
     const fetchRecipe = async () => {
       try {

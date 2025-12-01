@@ -11,6 +11,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import mealLogRoutes from './routes/mealLogRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
+import userRecipeRoutes from './routes/userRecipeRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -47,6 +48,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/meals', mealLogRoutes);
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/user-recipes', userRecipeRoutes);
 
 // Server
 const PORT = process.env.PORT || 8000;

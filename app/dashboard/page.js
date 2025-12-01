@@ -286,6 +286,7 @@ export default function DashboardPage() {
             { id: 'profile', label: 'Profile', icon: User },
             { id: 'favorites', label: 'Favorites', icon: Heart },
             { id: 'shopping', label: 'Shopping List', icon: ShoppingCart },
+            { id: 'my-recipes', label: 'My Recipes', icon: Utensils },
             { id: 'ai-plans', label: 'AI Plans', icon: Target },
             { id: 'settings', label: 'Preferences', icon: Settings },
           ].map((tab) => (
@@ -858,6 +859,45 @@ export default function DashboardPage() {
                     </div>
                   </motion.div>
                 )}
+
+              </div>
+            </div>
+          )}
+
+          {/* My Recipes Tab */}
+          {activeTab === 'my-recipes' && (
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-[#111] border border-white/10 p-4 md:p-8 rounded-lg">
+                <div className="flex justify-between items-center mb-6 md:mb-8 border-b border-white/10 pb-4">
+                  <h2 className="text-2xl md:text-3xl font-bold text-white font-serif">
+                    My Recipes
+                  </h2>
+                  <button
+                    onClick={() => router.push('/create-recipe')}
+                    className="flex items-center gap-2 bg-[#d4af37] text-black px-4 md:px-6 py-2 md:py-3 font-bold uppercase tracking-wider hover:bg-[#f1c40f] transition-colors text-sm"
+                  >
+                    <Utensils className="w-4 h-4" />
+                    Create Recipe
+                  </button>
+                </div>
+
+                <p className="text-gray-400 mb-6">
+                  Create and manage your own custom recipes. Share your culinary creations with the community!
+                </p>
+
+                <div className="bg-[#0a0a0a] border border-white/5 p-6 text-center">
+                  <Utensils className="w-16 h-16 text-[#d4af37] mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-white mb-2">Start Creating</h3>
+                  <p className="text-gray-400 mb-6">
+                    Click the "Create Recipe" button above to add your first custom recipe with images, ingredients, and instructions.
+                  </p>
+                  <button
+                    onClick={() => router.push('/my-recipes')}
+                    className="bg-transparent border border-[#d4af37] text-[#d4af37] px-6 py-3 hover:bg-[#d4af37] hover:text-black transition-all uppercase tracking-wider font-bold text-sm"
+                  >
+                    View All My Recipes
+                  </button>
+                </div>
               </div>
             </div>
           )}

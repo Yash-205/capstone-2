@@ -3,8 +3,14 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const FoodItem = ({ food, index = 0 }) => {
+  // Check if it's a user recipe (ID starts with "user-")
+  const isUserRecipe = food.id && String(food.id).startsWith('user-');
+  const recipeUrl = isUserRecipe
+    ? `/user-recipes/${String(food.id).replace('user-', '')}`
+    : `/recipie/${food.id}`;
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
@@ -29,7 +35,7 @@ const FoodItem = ({ food, index = 0 }) => {
 
         <div className="mt-auto pt-6 relative">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-          <Link href={`/recipie/${food.id}`}>
+          <Link href={recipeUrl}>
             <button className="w-full py-3 bg-transparent border border-white/20 text-gray-300 text-sm uppercase tracking-widest hover:bg-[#d4af37] hover:text-black hover:border-[#d4af37] transition-all duration-300">
               View Recipe
             </button>

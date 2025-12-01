@@ -7,8 +7,7 @@ import FoodList from "../../components/FoodList";
 import Loader from "../../components/Loader";
 import { useAuth } from "../../context/AuthContext";
 
-const URL = "https://api.spoonacular.com/recipes/complexSearch";
-const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
+const URL = `${process.env.NEXT_PUBLIC_API_URL}/api/recipes/search`;
 
 const diets = [
   "No Diet",
@@ -46,7 +45,7 @@ const DishPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        let apiURL = `${URL}?query=${dish}&number=9&apiKey=${API_Key}`;
+        let apiURL = `${URL}?query=${dish}&number=9`;
 
         if (selectedDiet && selectedDiet !== "No Diet") {
           apiURL += `&diet=${selectedDiet}`;
@@ -81,9 +80,9 @@ const DishPage = () => {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
-        
+
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -94,7 +93,7 @@ const DishPage = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#f1c40f]">{dish.toUpperCase()}</span>
             </h1>
             <p className="md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-4 border-l-2 border-[#d4af37] pl-6">
-              {foodData.length > 0 
+              {foodData.length > 0
                 ? `Found ${foodData.length} delicious ${foodData.length === 1 ? 'recipe' : 'recipes'} for you to explore.`
                 : 'Searching for the perfect recipes...'
               }
@@ -110,7 +109,7 @@ const DishPage = () => {
 
       {/* Diet Filter */}
       {!user?.dietPreference && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -131,11 +130,10 @@ const DishPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleDietSelect(diet)}
-                  className={`px-4 py-3 text-sm font-medium uppercase tracking-wider transition-all duration-300 ${
-                    selectedDiet === diet
+                  className={`px-4 py-3 text-sm font-medium uppercase tracking-wider transition-all duration-300 ${selectedDiet === diet
                       ? "bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/30"
                       : "bg-[#111] text-gray-400 border border-white/10 hover:border-[#d4af37]/50 hover:text-[#d4af37]"
-                  }`}
+                    }`}
                 >
                   {diet}
                 </motion.button>
@@ -148,14 +146,14 @@ const DishPage = () => {
       {/* Recipe List */}
       <section className="w-full bg-[#0a0a0a] py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="flex flex-col items-center mb-16 md:mb-24"
           >
-            <motion.span 
+            <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -164,7 +162,7 @@ const DishPage = () => {
             >
               Search Results
             </motion.span>
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
