@@ -12,7 +12,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { checkAuth } = useAuth();
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -31,8 +31,18 @@ export default function LoginPage() {
       }
 
       await checkAuth();
-      router.refresh();
-      router.push('/');
+
+      // Check if profile is completed
+      const userRes = await fetch(`${API_BASE_URL}/api/auth/me`, {
+        credentials: 'include',
+      });
+      const userData = await userRes.json();
+
+      if (userData.user && !userData.user.profileCompleted) {
+        router.push('/profile-complete');
+      } else {
+        router.push('/');
+      }
     } catch (err) {
       console.error('Login error:', err);
       alert('Something went wrong');
@@ -47,7 +57,7 @@ export default function LoginPage() {
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/60 to-black/40"></div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import FoodDetail from '../components/FoodDetail'; // adjust if needed
 import Loader from '../components/Loader'; // import your full-page loader
 
-const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
+
 
 const RandomRecipePage = () => {
   const [randomID, setRandomID] = useState(null);
@@ -14,7 +14,7 @@ const RandomRecipePage = () => {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://api.spoonacular.com/recipes/random?number=1&apiKey=${API_Key}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/recipes/random?number=1`
       );
       const data = await res.json();
       setRandomID(data.recipes[0].id);

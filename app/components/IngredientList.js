@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2, RefreshCw } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const IngredientList = ({ ingredients }) => {
@@ -49,7 +49,7 @@ const IngredientList = ({ ingredients }) => {
     setLoadingIngredient(ingredientName);
     try {
       const res = await fetch(
-        `https://api.spoonacular.com/food/ingredients/substitutes?ingredientName=${ingredientName}&apiKey=${API_Key}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/recipes/substitutes?ingredientName=${ingredientName}`
       );
       const data = await res.json();
 
@@ -116,7 +116,7 @@ const IngredientList = ({ ingredients }) => {
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -181,11 +181,10 @@ const IngredientList = ({ ingredients }) => {
 
                   <button
                     onClick={() => fetchSubstitutes(item.name)}
-                    className={`${
-                      loadingIngredient === item.name
-                        ? "bg-[#d4af37]/20 cursor-not-allowed"
-                        : "bg-[#d4af37]/20 hover:bg-[#d4af37]/30 border-[#d4af37]/50"
-                    } border text-[#d4af37] px-2 py-2 text-xs transition-all w-full flex items-center justify-center gap-1 uppercase tracking-wider`}
+                    className={`${loadingIngredient === item.name
+                      ? "bg-[#d4af37]/20 cursor-not-allowed"
+                      : "bg-[#d4af37]/20 hover:bg-[#d4af37]/30 border-[#d4af37]/50"
+                      } border text-[#d4af37] px-2 py-2 text-xs transition-all w-full flex items-center justify-center gap-1 uppercase tracking-wider`}
                     disabled={loadingIngredient === item.name}
                   >
                     {loadingIngredient === item.name ? (
@@ -210,7 +209,7 @@ const IngredientList = ({ ingredients }) => {
       )}
 
       {selectedIngredient && (
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}

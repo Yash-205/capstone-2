@@ -29,7 +29,7 @@ const Header = () => {
     }
   };
 
-  const navLinks = ["Home", "Random", "Videos"];
+  const navLinks = ["Home", "AI Meals", "Random", "Videos"];
 
   const commonLinkClass =
     "text-white transition-all duration-300 hover:text-[#d4af37] hover:scale-105 font-medium tracking-wide";
@@ -37,9 +37,8 @@ const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          scrolled ? "bg-black/90 backdrop-blur-sm" : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-black/90 backdrop-blur-sm" : "bg-transparent"
+          }`}
       >
         <div className="max-w-7xl mx-auto flex justify-between items-center p-6">
           <Link
@@ -51,15 +50,22 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex space-x-8 items-center">
-            {navLinks.map((text) => (
-              <Link
-                key={text}
-                href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
-                className={commonLinkClass}
-              >
-                {text.toUpperCase()}
-              </Link>
-            ))}
+            {navLinks.map((text) => {
+              let href = "/";
+              if (text === "Home") href = "/";
+              else if (text === "AI Meals") href = "/ai-meals";
+              else href = `/${text.toLowerCase()}`;
+
+              return (
+                <Link
+                  key={text}
+                  href={href}
+                  className={commonLinkClass}
+                >
+                  {text.toUpperCase()}
+                </Link>
+              );
+            })}
 
             {user ? (
               <div className="flex items-center space-x-6">
@@ -97,12 +103,11 @@ const Header = () => {
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed top-0 left-0 h-full w-80 max-w-[70%] bg-[#0a0a0a] z-50 transform transition-transform duration-300 ease-in-out shadow-2xl border-r border-[#d4af37] ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`lg:hidden fixed top-0 left-0 h-full w-80 max-w-[70%] bg-[#0a0a0a] z-50 transform transition-transform duration-300 ease-in-out shadow-2xl border-r border-[#d4af37] ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="flex flex-col h-full p-8 relative">
-         
+
 
           {/* Logo in Drawer */}
           <div className="mb-12 mt-4">
@@ -118,17 +123,24 @@ const Header = () => {
 
           {/* Navigation Links */}
           <ul className="space-y-6">
-            {navLinks.map((text) => (
-              <li key={text}>
-                <Link
-                  href={text === "Home" ? "/" : `/${text.toLowerCase()}`}
-                  onClick={() => setIsOpen(false)}
-                  className="block text-lg font-medium text-gray-300 hover:text-[#d4af37] hover:pl-2 transition-all duration-300 uppercase tracking-wide border-l-2 border-transparent hover:border-[#d4af37]"
-                >
-                  {text}
-                </Link>
-              </li>
-            ))}
+            {navLinks.map((text) => {
+              let href = "/";
+              if (text === "Home") href = "/";
+              else if (text === "AI Meals") href = "/ai-meals";
+              else href = `/${text.toLowerCase()}`;
+
+              return (
+                <li key={text}>
+                  <Link
+                    href={href}
+                    onClick={() => setIsOpen(false)}
+                    className="block text-lg font-medium text-gray-300 hover:text-[#d4af37] hover:pl-2 transition-all duration-300 uppercase tracking-wide border-l-2 border-transparent hover:border-[#d4af37]"
+                  >
+                    {text}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Auth Links */}

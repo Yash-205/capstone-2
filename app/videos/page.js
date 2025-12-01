@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Loader from "../components/Loader";
 
-const API_KEY = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
+
 const getVideoUrl = (id) => `https://www.youtube.com/embed/${id}`;
 
 const defaultDishes = [
@@ -30,7 +30,7 @@ const RecipeVideosPage = () => {
       setLoading(true);
       const randomOffset = Math.floor(Math.random() * 100);
       const res = await fetch(
-        `https://api.spoonacular.com/food/videos/search?query=${query}&number=9&offset=${randomOffset}&apiKey=${API_KEY}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/recipes/videos?query=${query}&number=9&offset=${randomOffset}`
       );
       const data = await res.json();
       setVideos(data.videos || []);
@@ -77,7 +77,7 @@ const RecipeVideosPage = () => {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
-        
+
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
           <div className="max-w-4xl animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
@@ -87,7 +87,7 @@ const RecipeVideosPage = () => {
             <p className="text-lg md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-12 border-l-2 border-[#d4af37] pl-6">
               Master the art of cooking with our curated collection of step-by-step video tutorials.
             </p>
-            
+
             <form onSubmit={handleSearch} className="flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-0 w-full max-w-2xl bg-transparent md:bg-[#0a0a0a] md:border md:border-[#d4af37] md:p-2 md:shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-300 md:hover:shadow-[0_0_70px_rgba(212,175,55,0.25)] transform md:hover:-translate-y-1">
               <input
                 value={input}
@@ -110,14 +110,14 @@ const RecipeVideosPage = () => {
       {/* Videos Grid Section */}
       <section className="w-full bg-[#0a0a0a] py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="flex flex-col items-center mb-16 md:mb-24"
           >
-            <motion.span 
+            <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -126,7 +126,7 @@ const RecipeVideosPage = () => {
             >
               Curated Collection
             </motion.span>
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -147,8 +147,8 @@ const RecipeVideosPage = () => {
                   initial={{ opacity: 0, y: 60, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true, margin: "-100px" }}
-                  transition={{ 
-                    duration: 0.6, 
+                  transition={{
+                    duration: 0.6,
                     delay: index * 0.15,
                     ease: [0.25, 0.46, 0.45, 0.94]
                   }}
@@ -173,7 +173,7 @@ const RecipeVideosPage = () => {
                   </div>
 
                   <div className="p-6 flex flex-col flex-grow">
-                    <motion.h3 
+                    <motion.h3
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -183,7 +183,7 @@ const RecipeVideosPage = () => {
                       {video.title}
                     </motion.h3>
 
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}

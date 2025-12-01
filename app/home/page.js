@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion, useAnimation } from 'framer-motion';
 import FoodList from '../components/FoodList';
 
-const API_KEY = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
+
 
 export default function Home() {
   const [dish, setDish] = useState('');
@@ -20,7 +20,7 @@ export default function Home() {
   // Track scroll direction
   useEffect(() => {
     let lastScrollY = window.scrollY;
-    
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollingDown(currentScrollY > lastScrollY);
@@ -40,7 +40,7 @@ export default function Home() {
         // Fetch by type
         for (const category of categories) {
           const res = await fetch(
-            `https://api.spoonacular.com/recipes/random?number=6&tags=${category}&apiKey=${API_KEY}`
+            `${process.env.NEXT_PUBLIC_API_URL}/api/recipes/random?number=6&tags=${category}`
           );
           const data = await res.json();
           if (data.recipes) {
@@ -71,7 +71,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col w-full bg-gray-50">
-      
+
       <section
         className="min-h-screen flex flex-col justify-center bg-cover bg-center w-full relative"
         style={{
@@ -80,7 +80,7 @@ export default function Home() {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
-        
+
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
           <div className="max-w-4xl animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter font-serif mb-6 leading-none">
@@ -90,7 +90,7 @@ export default function Home() {
             <p className="text-lg md:text-xl text-gray-300 font-light tracking-wide max-w-2xl mb-12 border-l-2 border-[#d4af37] pl-6">
               Discover the art of cooking with our curated collection of exquisite recipes for the modern epicurean.
             </p>
-            
+
             <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4 md:gap-0 w-full max-w-2xl bg-transparent md:bg-[#0a0a0a] md:border md:border-[#d4af37] md:p-2 md:shadow-[0_0_50px_rgba(212,175,55,0.15)] transition-all duration-300 md:hover:shadow-[0_0_70px_rgba(212,175,55,0.25)] transform md:hover:-translate-y-1">
               <input
                 value={dish}
@@ -149,7 +149,7 @@ export default function Home() {
                     className="h-[1px] bg-gradient-to-r from-[#d4af37] via-[#d4af37] to-transparent"
                   />
                 </div>
-                <motion.h2 
+                <motion.h2
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: false, margin: "-100px" }}

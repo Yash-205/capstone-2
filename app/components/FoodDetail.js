@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, Users, Leaf, Sprout, DollarSign, Heart } from "lucide-react";
+import { Clock, Users, Leaf, Sprout, DollarSign, Heart, Target } from "lucide-react";
 import IngredientList from "./IngredientList";
 import Loader from "./Loader";
 import CommentBox from "./CommentBox";
@@ -12,15 +12,14 @@ const FoodDetail = ({ foodID }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_Key = process.env.NEXT_PUBLIC_SPOONACULAR_API_KEY;
-  const url = `https://api.spoonacular.com/recipes/${foodID}/information`;
+
 
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
         setIsLoading(true);
         const res = await fetch(
-          `https://api.spoonacular.com/recipes/${foodID}/information?apiKey=${API_Key}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/recipes/${foodID}?includeNutrition=true`
         );
         if (!res.ok) throw new Error("Failed to fetch data");
         const data = await res.json();
@@ -59,9 +58,9 @@ const FoodDetail = ({ foodID }) => {
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/50 to-black/30"></div>
-          
+
           <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-20">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -71,10 +70,10 @@ const FoodDetail = ({ foodID }) => {
                 {food.title}
               </h1>
               {food.summary && (
-                <p 
+                <p
                   className="md:text-xl text-gray-300 font-light tracking-wide max-w-2xl border-l-2 border-[#d4af37] pl-6"
-                  dangerouslySetInnerHTML={{ 
-                    __html: food.summary.split('.')[0] + '.' 
+                  dangerouslySetInnerHTML={{
+                    __html: food.summary.split('.')[0] + '.'
                   }}
                 />
               )}
@@ -87,7 +86,7 @@ const FoodDetail = ({ foodID }) => {
       <div className="w-full max-w-7xl mx-auto px-6 py-16 space-y-12">
         {/* Summary */}
         {food.summary && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -138,17 +137,62 @@ const FoodDetail = ({ foodID }) => {
           Add to Favorites
         </motion.button>
 
+        {/* Log Meal Button */}
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          onClick={async () => {
+            try {
+              // Extract nutrition data from the recipe
+              const nutrition = food.nutrition?.nutrients || [];
+              const calories = nutrition.find(n => n.name === "Calories")?.amount || 0;
+              const protein = nutrition.find(n => n.name === "Protein")?.amount || 0;
+              const carbs = nutrition.find(n => n.name === "Carbohydrates")?.amount || 0;
+              const fat = nutrition.find(n => n.name === "Fat")?.amount || 0;
+
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/meals`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  credentials: "include",
+                  body: JSON.stringify({
+                    recipeId: food.id,
+                    recipeName: food.title,
+                    recipeImage: food.image,
+                    calories: Math.round(calories),
+                    protein: Math.round(protein),
+                    carbs: Math.round(carbs),
+                    fat: Math.round(fat),
+                    mealType: 'snack' // Default to snack, user can categorize later
+                  }),
+                }
+              );
+              const data = await res.json();
+              if (!res.ok) throw new Error(data.msg || "Failed");
+              alert("✅ Meal logged! Check your dashboard to see your progress.");
+            } catch (err) {
+              alert("❌ " + err.message);
+            }
+          }}
+          className="w-full md:w-auto px-8 py-4 bg-[#d4af37] text-black hover:bg-[#f1c40f] transition-all duration-300 uppercase tracking-widest font-bold text-sm flex items-center justify-center gap-2"
+        >
+          <Target className="w-5 h-5" />
+          Log Meal
+        </motion.button>
+
         {/* Meta Info */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className={`grid gap-6 ${
-            food.vegan
-              ? "grid-cols-2 md:grid-cols-4"
-              : "grid-cols-2 md:grid-cols-3"
-          }`}
+          className={`grid gap-6 ${food.vegan
+            ? "grid-cols-2 md:grid-cols-4"
+            : "grid-cols-2 md:grid-cols-3"
+            }`}
         >
           <div className="bg-[#111] border border-white/5 shadow-xl p-6 text-center">
             <Clock className="w-10 h-10 mx-auto mb-3 text-[#d4af37]" />
@@ -177,7 +221,7 @@ const FoodDetail = ({ foodID }) => {
         </motion.div>
 
         {/* Price Info */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -203,7 +247,7 @@ const FoodDetail = ({ foodID }) => {
         )}
 
         {/* Instructions */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

@@ -7,6 +7,10 @@ import authRoutes from './routes/authRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import shoppingListRoutes from './routes/shoppingListRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
+import mealLogRoutes from './routes/mealLogRoutes.js';
+import recipeRoutes from './routes/recipeRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -39,6 +43,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/shopping-list', shoppingListRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/meals', mealLogRoutes);
+app.use('/api/recipes', recipeRoutes);
 
 // Server
 const PORT = process.env.PORT || 8000;

@@ -2,6 +2,7 @@
 import "./globals.css";
 import Footer from "./components/footer";
 import Header from "./components/header";
+import ProfileRedirect from "./components/ProfileRedirect";
 import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
@@ -14,11 +15,13 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body>
         <AuthProvider>
-          <Header />
-          <div className="mx-auto min-h-screen">
-            {children}
-          </div>
-          <Footer />
+          <ProfileRedirect>
+            <Header />
+            <div className="mx-auto min-h-screen">
+              {children}
+            </div>
+            <Footer />
+          </ProfileRedirect>
         </AuthProvider>
       </body>
     </html>
