@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import { motion } from "framer-motion";
@@ -16,11 +16,7 @@ export default function UserRecipeDetail() {
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (params.id) fetchRecipe();
-    }, [params.id]);
-
-    const fetchRecipe = async () => {
+    const fetchRecipe = useCallback(async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/api/user-recipes/${params.id}`);
             if (!res.ok) throw new Error("Failed to fetch recipe");
@@ -31,7 +27,11 @@ export default function UserRecipeDetail() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.id]);
+
+    useEffect(() => {
+        if (params.id) fetchRecipe();
+    }, [params.id, fetchRecipe]);
 
     const handleDelete = async () => {
         if (!confirm("Are you sure you want to delete this recipe?")) return;

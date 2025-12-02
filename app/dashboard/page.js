@@ -381,7 +381,7 @@ export default function DashboardPage() {
                       {/* Progress Tracking */}
                       <div className="bg-[#0a0a0a] p-6 border border-white/5 mb-6">
                         <div className="flex items-center justify-between mb-4">
-                          <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Today's Progress</h4>
+                          <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Today&apos;s Progress</h4>
                           <button
                             onClick={() => {
                               // Reset consumed values (for demo - in production, this would be stored in backend)
@@ -469,7 +469,7 @@ export default function DashboardPage() {
                         <div className="mt-6 pt-6 border-t border-white/5">
                           <div className="bg-[#111] p-4 border border-[#d4af37]/20 rounded">
                             <p className="text-gray-400 text-sm">
-                              <span className="text-[#d4af37] font-semibold">💡 Tip:</span> Log meals by clicking the "Log Meal" button on recipe detail pages. Your daily intake will be tracked automatically!
+                              <span className="text-[#d4af37] font-semibold">💡 Tip:</span> Log meals by clicking the &quot;Log Meal&quot; button on recipe detail pages. Your daily intake will be tracked automatically!
                             </p>
                           </div>
                         </div>
@@ -759,7 +759,7 @@ export default function DashboardPage() {
                             <div>C: <span className="text-white">{meal.carbs}</span></div>
                             <div>F: <span className="text-white">{meal.fat}</span></div>
                           </div>
-                          <p className="text-sm text-gray-300 italic">"{meal.suggestion}"</p>
+                          <p className="text-sm text-gray-300 italic">&quot;{meal.suggestion}&quot;</p>
                         </div>
                       ))}
                     </div>
@@ -829,7 +829,7 @@ export default function DashboardPage() {
                   <Utensils className="w-16 h-16 text-[#d4af37] mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">Start Creating</h3>
                   <p className="text-gray-400 mb-6">
-                    Click the "Create Recipe" button above to add your first custom recipe with images, ingredients, and instructions.
+                    Click the &quot;Create Recipe&quot; button above to add your first custom recipe with images, ingredients, and instructions.
                   </p>
                   <button
                     onClick={() => router.push('/my-recipes')}

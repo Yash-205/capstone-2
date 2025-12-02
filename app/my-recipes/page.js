@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { Edit, Trash2, Plus } from "lucide-react";
 import Loader from "../components/Loader";
+import Image from "next/image";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,15 +16,7 @@ export default function MyRecipes() {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (!user) {
-            router.push("/login");
-            return;
-        }
-        fetchMyRecipes();
-    }, [user]);
-
-    const fetchMyRecipes = async () => {
+    const fetchMyRecipes = useCallback(async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/api/user-recipes/my/recipes`, {
                 credentials: "include"
@@ -36,7 +29,15 @@ export default function MyRecipes() {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        if (!user) {
+            router.push("/login");
+            return;
+        }
+        fetchMyRecipes();
+    }, [user, fetchMyRecipes]);
 
     const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this recipe?")) return;
@@ -78,7 +79,7 @@ export default function MyRecipes() {
 
                 {recipes.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-gray-400 text-xl mb-6">You haven't created any recipes yet.</p>
+                        <p className="text-gray-400 text-xl mb-6">You haven&apos;t created any recipes yet.</p>
                         <button
                             onClick={() => router.push("/create-recipe")}
                             className="bg-[#d4af37] text-black px-8 py-4 font-bold uppercase tracking-wider hover:bg-[#f1c40f] transition-colors"
@@ -97,10 +98,11 @@ export default function MyRecipes() {
                                 className="bg-[#111] border border-white/10 overflow-hidden group hover:border-[#d4af37]/30 transition-all"
                             >
                                 <div className="relative h-48 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={recipe.image}
                                         alt={recipe.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
                                     />
                                 </div>
                                 <div className="p-6">

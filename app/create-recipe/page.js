@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
-import { Plus, Minus, Upload, Loader as LoaderIcon } from "lucide-react";
+import { Plus, Minus, Upload, Loader as LoaderIcon, X } from "lucide-react";
 import Loader from "../components/Loader";
+import Image from "next/image";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -144,17 +145,22 @@ export default function CreateRecipe() {
                             </label>
                             <div className="flex flex-col items-center">
                                 {imagePreview ? (
-                                    <div className="relative w-full h-64 mb-4">
-                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                    <div className="relative h-64 md:h-80 w-full rounded-lg overflow-hidden border border-white/10">
+                                        <Image
+                                            src={imagePreview}
+                                            alt="Recipe preview"
+                                            fill
+                                            className="object-cover"
+                                        />
                                         <button
                                             type="button"
                                             onClick={() => {
                                                 setImagePreview(null);
                                                 setFormData({ ...formData, image: null });
                                             }}
-                                            className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 text-sm"
+                                            className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-red-500/80 rounded-full text-white transition-colors backdrop-blur-sm"
                                         >
-                                            Remove
+                                            <X className="w-5 h-5" />
                                         </button>
                                     </div>
                                 ) : (

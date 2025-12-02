@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import Loader from "../components/Loader";
+import Image from "next/image";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,11 +21,7 @@ export default function UserRecipes() {
         dairyFree: false
     });
 
-    useEffect(() => {
-        fetchRecipes();
-    }, [filters]);
-
-    const fetchRecipes = async () => {
+    const fetchRecipes = useCallback(async () => {
         try {
             const params = new URLSearchParams();
             if (search) params.append("search", search);
@@ -41,7 +38,11 @@ export default function UserRecipes() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [search, filters]);
+
+    useEffect(() => {
+        fetchRecipes();
+    }, [fetchRecipes]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -120,7 +121,12 @@ export default function UserRecipes() {
                                     className="bg-[#111] border border-white/10 overflow-hidden group hover:border-[#d4af37]/30 transition-all cursor-pointer"
                                 >
                                     <div className="relative h-48 overflow-hidden">
-                                        <img src={recipe.image} alt={recipe.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        <Image
+                                            src={recipe.image}
+                                            alt={recipe.title}
+                                            fill
+                                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
                                         <div className="absolute top-2 right-2 bg-[#d4af37] text-black px-3 py-1 text-xs font-bold uppercase">
                                             Community
                                         </div>

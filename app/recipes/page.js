@@ -9,7 +9,9 @@ import RecipeFilters from "../components/RecipeFilters";
 
 
 
-const RecipesPage = () => {
+import { Suspense } from "react";
+
+const RecipesContent = () => {
     const searchParams = useSearchParams();
     const [foodData, setFoodData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -255,6 +257,14 @@ const RecipesPage = () => {
                 </div>
             </section>
         </div>
+    );
+};
+
+const RecipesPage = () => {
+    return (
+        <Suspense fallback={<Loader />}>
+            <RecipesContent />
+        </Suspense>
     );
 };
 

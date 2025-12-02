@@ -33,8 +33,31 @@ export default function Home() {
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      // 1. Check Cache
+      const CACHE_KEY = 'homeRecipesCache';
+      const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+      try {
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+          const { timestamp, recipes: cachedRecipes } = JSON.parse(cachedData);
+          const now = Date.now();
+
+          // If cache is valid (less than 24 hours old)
+          if (now - timestamp < CACHE_DURATION) {
+            console.log("Using cached home recipes");
+            setRecipes(cachedRecipes);
+            return; // Skip API fetch
+          }
+        }
+      } catch (e) {
+        console.error("Error reading cache:", e);
+      }
+
+      // 2. Fetch from API if no valid cache
       const categories = ['breakfast', 'lunch', 'dinner'];
-      const newRecipes = { ...recipes };
+      // Initialize fresh object instead of depending on state to avoid useEffect dependency
+      const newRecipes = { breakfast: [], lunch: [], dinner: [] };
 
       try {
         // Fetch by type
@@ -49,6 +72,17 @@ export default function Home() {
         }
 
         setRecipes(newRecipes);
+
+        // 3. Save to Cache
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(),
+            recipes: newRecipes
+          }));
+        } catch (e) {
+          console.error("Error saving to cache:", e);
+        }
+
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
