@@ -18,7 +18,7 @@ export default function ProfileCompletePage() {
         weight: '',
         activityLevel: '',
         fitnessGoal: '',
-        mealType: '',
+        dietPreference: '',
         allergies: [],
         preferredCuisines: [],
         mealsPerDay: 3
@@ -36,7 +36,7 @@ export default function ProfileCompletePage() {
         { value: 'very active', label: 'Very Active (intense exercise daily)' }
     ];
     const fitnessGoalOptions = ['weight loss', 'balanced', 'muscle gain'];
-    const mealTypeOptions = ['veg', 'non-veg', 'vegan'];
+    const dietPreferenceOptions = ['Omnivore', 'Vegetarian', 'Vegan'];
     const allergyOptions = ['peanut', 'milk', 'gluten', 'eggs', 'soy', 'fish', 'shellfish', 'tree nuts'];
     const cuisineOptions = ['Indian', 'Italian', 'Chinese', 'Mexican', 'Thai', 'Japanese', 'Mediterranean', 'American'];
 
@@ -248,23 +248,40 @@ export default function ProfileCompletePage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-gray-400 text-sm mb-2">Meal Type *</label>
+                                <label className="block text-gray-400 text-sm mb-2">Dietary Preference *</label>
                                 <select
-                                    name="mealType"
-                                    value={formData.mealType}
-                                    onChange={handleChange}
+                                    name="dietPreference"
+                                    value={formData.dietPreference === '' ? 'Omnivore' : formData.dietPreference}
+                                    onChange={(e) => {
+                                        const value = e.target.value === 'Omnivore' ? '' : e.target.value;
+                                        setFormData(prev => ({ ...prev, dietPreference: value }));
+                                    }}
                                     className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white focus:outline-none focus:border-[#d4af37] transition-colors"
                                     required
                                 >
-                                    <option value="">Select Meal Type</option>
-                                    {mealTypeOptions.map(option => (
+                                    {dietPreferenceOptions.map(option => (
                                         <option key={option} value={option} className="bg-[#0a0a0a]">
-                                            {option.charAt(0).toUpperCase() + option.slice(1)}
+                                            {option}
                                         </option>
                                     ))}
                                 </select>
                             </div>
 
+                            <div>
+                                <label className="block text-gray-400 text-sm mb-2">Meals Per Day</label>
+                                <input
+                                    type="number"
+                                    name="mealsPerDay"
+                                    value={formData.mealsPerDay}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] transition-colors"
+                                    min="1"
+                                    max="10"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-gray-400 text-sm mb-2">Meals Per Day</label>
                                 <input

@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Lottie from 'lottie-react';
-import animationData from '../../public/loader-animation.json';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const triviaList = [
   "Peaches are the third most popular fruit grown in America.",
@@ -28,12 +27,13 @@ const Loader = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] px-4 text-center">
-      <Lottie
-        animationData={animationData}
+      <DotLottieReact
+        src="https://lottie.host/58226a4d-d41b-4b9a-a903-60cbe416187b/x2Wun3PFXE.lottie"
         loop
         autoplay
         className="w-40 h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-80 lg:h-80"
       />
+
       <p className="mt-6 text-lg sm:text-xl text-[#d4af37] max-w-lg font-light tracking-wide">
         {randomFact}
       </p>

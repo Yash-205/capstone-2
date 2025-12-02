@@ -104,6 +104,16 @@ const recipeSchema = new mongoose.Schema({
         default: false
     },
 
+    // Cuisine and dish type
+    cuisines: [{
+        type: String,
+        trim: true
+    }],
+    dishTypes: [{
+        type: String,
+        trim: true
+    }],
+
     // Price (optional)
     pricePerServing: {
         type: Number,

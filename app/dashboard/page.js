@@ -10,18 +10,9 @@ import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const diets = [
-  "Gluten Free",
-  "Ketogenic",
-  "Vegetarian",
-  "Lacto-Vegetarian",
-  "Ovo-Vegetarian",
-  "Vegan",
-  "Pescetarian",
-  "Paleo",
-  "Primal",
-  "Low FODMAP",
-  "Whole30",
-  "",
+  "Omnivore",      // Default - no dietary restrictions (empty string in DB)
+  "Vegetarian",    // No meat
+  "Vegan",         // No animal products
 ];
 
 export default function DashboardPage() {
@@ -150,7 +141,7 @@ export default function DashboardPage() {
     if (!user) {
       router.push("/login");
     } else {
-      setDiet(user.dietPreference || "");
+      setDiet(user.dietPreference === '' ? 'Omnivore' : user.dietPreference || 'Omnivore');
       fetchShoppingList();
       fetchFavorites();
       fetchTodaysMeals(); // Fetch actual meal data
@@ -288,7 +279,6 @@ export default function DashboardPage() {
             { id: 'shopping', label: 'Shopping List', icon: ShoppingCart },
             { id: 'my-recipes', label: 'My Recipes', icon: Utensils },
             { id: 'ai-plans', label: 'AI Plans', icon: Target },
-            { id: 'settings', label: 'Preferences', icon: Settings },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -565,16 +555,12 @@ export default function DashboardPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-[#0a0a0a] p-4 border border-white/5">
-                        <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Meal Type</p>
-                        <p className="text-white text-lg capitalize">{user.mealType || 'Not set'}</p>
+                        <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Dietary Preference</p>
+                        <p className="text-white text-lg">{user.dietPreference === '' || !user.dietPreference ? 'Omnivore' : user.dietPreference}</p>
                       </div>
                       <div className="bg-[#0a0a0a] p-4 border border-white/5">
                         <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Meals Per Day</p>
                         <p className="text-white text-lg">{user.mealsPerDay || 'Not set'}</p>
-                      </div>
-                      <div className="bg-[#0a0a0a] p-4 border border-white/5">
-                        <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Diet Preference</p>
-                        <p className="text-white text-lg">{user.dietPreference || 'No preference'}</p>
                       </div>
                       <div className="bg-[#0a0a0a] p-4 border border-white/5">
                         <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Allergies</p>
@@ -707,52 +693,6 @@ export default function DashboardPage() {
                     <p className="text-gray-400 text-sm md:text-base">Your shopping list is empty.</p>
                   </div>
                 )}
-              </div>
-            </div>
-          )}
-
-          {/* Settings Tab */}
-          {activeTab === 'settings' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-[#111] border border-white/10 p-4 md:p-8 rounded-lg">
-                <h2 className="text-2xl md:text-3xl font-bold text-white font-serif mb-6 md:mb-8 border-b border-white/10 pb-4">
-                  Preferences
-                </h2>
-
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-[#d4af37] text-xs md:text-sm font-bold uppercase tracking-wider mb-3 md:mb-4">
-                      Dietary Preference
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={diet}
-                        onChange={(e) => setDiet(e.target.value)}
-                        className="w-full bg-[#0a0a0a] border border-white/10 text-white px-3 py-3 md:px-4 text-sm md:text-base appearance-none focus:outline-none focus:border-[#d4af37] transition-colors"
-                      >
-                        <option value="">No Diet Preference</option>
-                        {diets.map((d) => (
-                          <option key={d} value={d}>
-                            {d}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={updateDiet}
-                    className="w-full py-3 md:py-4 bg-[#d4af37] text-black font-bold uppercase tracking-widest hover:bg-[#f1c40f] transition-colors flex items-center justify-center gap-2 text-sm md:text-base"
-                  >
-                    <Save className="w-4 h-4 md:w-5 md:h-5" />
-                    Save Changes
-                  </button>
-                </div>
               </div>
             </div>
           )}

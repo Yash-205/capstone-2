@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import FoodList from "../components/FoodList";
 import Loader from "../components/Loader";
+import RecipeFilters from "../components/RecipeFilters";
 
 
 
@@ -30,6 +31,9 @@ const RecipesPage = () => {
                 const maxFat = searchParams.get('maxFat');
                 const diet = searchParams.get('diet');
                 const excludeIngredients = searchParams.get('excludeIngredients');
+                const cuisine = searchParams.get('cuisine');
+                const type = searchParams.get('type');
+                const maxReadyTime = searchParams.get('maxReadyTime');
                 const number = searchParams.get('number') || '12';
 
                 // Build API URL - use backend proxy
@@ -56,6 +60,17 @@ const RecipesPage = () => {
                     apiURL += `&excludeIngredients=${excludeIngredients}`;
                 }
 
+                // Add backend-only filters
+                if (cuisine && cuisine !== '') {
+                    apiURL += `&cuisine=${cuisine}`;
+                }
+                if (type && type !== '') {
+                    apiURL += `&type=${type}`;
+                }
+                if (maxReadyTime && maxReadyTime !== '') {
+                    apiURL += `&maxReadyTime=${maxReadyTime}`;
+                }
+
                 console.log('[RECIPES_SEARCH] API URL:', apiURL);
 
                 const res = await fetch(apiURL);
@@ -72,7 +87,10 @@ const RecipesPage = () => {
                     carbs: minCarbs && maxCarbs ? `${minCarbs}-${maxCarbs}g` : null,
                     fat: minFat && maxFat ? `${minFat}-${maxFat}g` : null,
                     diet: diet || null,
-                    excluded: excludeIngredients || null
+                    excluded: excludeIngredients || null,
+                    cuisine: cuisine || null,
+                    dishType: type || null,
+                    maxCookingTime: maxReadyTime ? `${maxReadyTime} min` : null
                 });
             } catch (error) {
                 console.error("Error fetching recipes:", error);
@@ -117,6 +135,9 @@ const RecipesPage = () => {
                     </motion.div>
                 </div>
             </section>
+
+            {/* Filter Section */}
+            <RecipeFilters />
 
             {/* Search Criteria Display */}
             {Object.values(searchCriteria).some(v => v) && (
@@ -169,6 +190,24 @@ const RecipesPage = () => {
                                 <div className="bg-[#111] border border-white/10 p-4">
                                     <p className="text-gray-500 text-xs uppercase mb-1">Excluded</p>
                                     <p className="text-white font-medium capitalize">{searchCriteria.excluded}</p>
+                                </div>
+                            )}
+                            {searchCriteria.cuisine && (
+                                <div className="bg-[#111] border border-white/10 p-4">
+                                    <p className="text-gray-500 text-xs uppercase mb-1">Cuisine</p>
+                                    <p className="text-white font-medium capitalize">{searchCriteria.cuisine}</p>
+                                </div>
+                            )}
+                            {searchCriteria.dishType && (
+                                <div className="bg-[#111] border border-white/10 p-4">
+                                    <p className="text-gray-500 text-xs uppercase mb-1">Dish Type</p>
+                                    <p className="text-white font-medium capitalize">{searchCriteria.dishType}</p>
+                                </div>
+                            )}
+                            {searchCriteria.maxCookingTime && (
+                                <div className="bg-[#111] border border-white/10 p-4">
+                                    <p className="text-gray-500 text-xs uppercase mb-1">Max Time</p>
+                                    <p className="text-white font-medium">{searchCriteria.maxCookingTime}</p>
                                 </div>
                             )}
                         </div>

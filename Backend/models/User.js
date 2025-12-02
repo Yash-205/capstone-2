@@ -7,11 +7,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   dietPreference: {
     type: String,
-    enum: [
-      'Gluten Free', 'Ketogenic', 'Vegetarian', 'Lacto-Vegetarian',
-      'Ovo-Vegetarian', 'Vegan', 'Pescetarian', 'Paleo',
-      'Primal', 'Low FODMAP', 'Whole30', ''
-    ],
+    enum: ['', 'Vegetarian', 'Vegan'], // '' = Omnivore
     default: ''
   },
   shoppingList: [{ type: String }],
@@ -65,11 +61,6 @@ const userSchema = new mongoose.Schema({
   },
 
   // 🍽️ Meal Preferences
-  mealType: {
-    type: String,
-    enum: ['veg', 'non-veg', 'vegan', ''],
-    default: ''
-  },
   allergies: [{
     type: String
   }],

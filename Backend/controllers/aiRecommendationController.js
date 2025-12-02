@@ -100,7 +100,7 @@ User Profile:
 - Height: ${user.height}cm
 - Activity Level: ${user.activityLevel}
 - Fitness Goal: ${user.fitnessGoal}
-- Meal Type Preference: ${user.mealType}
+- Dietary Preference: ${user.dietPreference || 'Omnivore'}
 - Allergies: ${user.allergies?.join(', ') || 'None'}
 - Preferred Cuisines: ${user.preferredCuisines?.join(', ') || 'Any'}
 - Meals Per Day: ${user.mealsPerDay}

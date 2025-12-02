@@ -10,14 +10,14 @@ export const updateProfile = async (req, res) => {
             weight,
             activityLevel,
             fitnessGoal,
-            mealType,
+            dietPreference,
             allergies,
             preferredCuisines,
             mealsPerDay
         } = req.body;
 
-        // Validate required fields
-        if (!age || !gender || !height || !weight || !activityLevel || !fitnessGoal || !mealType) {
+        // Validate required fields (dietPreference is optional, defaults to empty string)
+        if (!age || !gender || !height || !weight || !activityLevel || !fitnessGoal) {
             return res.status(400).json({ msg: "Please provide all required fields" });
         }
 
@@ -30,7 +30,7 @@ export const updateProfile = async (req, res) => {
                 weight,
                 activityLevel,
                 fitnessGoal,
-                mealType,
+                dietPreference: dietPreference || '',
                 allergies: allergies || [],
                 preferredCuisines: preferredCuisines || [],
                 mealsPerDay: mealsPerDay || 3,

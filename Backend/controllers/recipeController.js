@@ -18,12 +18,16 @@ export const searchRecipes = async (req, res) => {
             maxFat,
             diet,
             excludeIngredients,
-            number = 12,
-            offset = 0
+            cuisine,        // NEW: Filter by cuisine (e.g., Italian, Mexican)
+            type,           // NEW: Filter by dish type (e.g., main course, dessert)
+            maxReadyTime,   // NEW: Filter by max cooking time
+            page = 1,
+            limit = 3, // Changed to 3 items per page as requested
+            sortBy  // NEW: Extract sorting parameter
         } = req.query;
 
-        // 1. Search Spoonacular API
-        let apiUrl = `${SPOONACULAR_BASE_URL}/complexSearch?apiKey=${API_KEY}&number=${number}&offset=${offset}&addRecipeNutrition=true`;
+        // 1. Fetch ALL results from Spoonacular API (max 100)
+        let apiUrl = `${SPOONACULAR_BASE_URL}/complexSearch?apiKey=${API_KEY}&number=100&offset=0&addRecipeNutrition=true`;
 
         if (query) apiUrl += `&query=${encodeURIComponent(query)}`;
         if (minCalories) apiUrl += `&minCalories=${minCalories}`;
@@ -34,24 +38,25 @@ export const searchRecipes = async (req, res) => {
         if (maxCarbs) apiUrl += `&maxCarbs=${maxCarbs}`;
         if (minFat) apiUrl += `&minFat=${minFat}`;
         if (maxFat) apiUrl += `&maxFat=${maxFat}`;
-        if (diet) apiUrl += `&diet=${encodeURIComponent(diet)}`;
+        // REMOVED: diet parameter from API call - we filter locally now
         if (excludeIngredients) apiUrl += `&excludeIngredients=${encodeURIComponent(excludeIngredients)}`;
 
         const apiPromise = fetch(apiUrl).then(res => res.json());
 
-        // 2. Search Local Database
+        // 2. Fetch ALL matching user recipes from local database
         const localQuery = {};
         if (query) {
             localQuery.$text = { $search: query };
         }
 
-        // Map Spoonacular diet to local fields
+        // Map diet preference to local fields (simplified to 3 options)
         if (diet) {
-            const dietLower = diet.toLowerCase();
-            if (dietLower.includes('vegetarian')) localQuery.vegetarian = true;
-            if (dietLower.includes('vegan')) localQuery.vegan = true;
-            if (dietLower.includes('gluten free')) localQuery.glutenFree = true;
-            // Add more mappings if needed
+            // diet can be: 'Vegetarian' or 'Vegan' (empty/omnivore = no filter)
+            if (diet === 'Vegetarian') {
+                localQuery.vegetarian = true;
+            } else if (diet === 'Vegan') {
+                localQuery.vegan = true;
+            }
         }
 
         // Nutrition filters for local DB
@@ -61,24 +66,26 @@ export const searchRecipes = async (req, res) => {
         if (maxProtein) localQuery['nutrition.protein'] = { ...localQuery['nutrition.protein'], $lte: parseInt(maxProtein) };
         // ... add other macros similarly if needed
 
-        const localPromise = Recipe.find(localQuery)
-            .limit(parseInt(number))
-            .skip(parseInt(offset))
-            .lean();
-
+        // Fetch ALL user recipes without pagination
+        const localPromise = Recipe.find(localQuery).lean();
         const localCountPromise = Recipe.countDocuments(localQuery);
 
-        // 3. Execute all searches
+        // 3. Execute all searches in parallel
         const [apiData, localRecipes, localTotal] = await Promise.all([apiPromise, localPromise, localCountPromise]);
 
         if (apiData.status === 'failure' || apiData.code) {
             console.error('[SPOONACULAR_ERROR]', apiData);
-            // If API fails, return only local recipes formatted
+            // If API fails, use only local recipes
+            const startIndex = (parseInt(page) - 1) * parseInt(limit);
+            const endIndex = startIndex + parseInt(limit);
+            const paginatedLocal = localRecipes.slice(startIndex, endIndex);
+
             return res.json({
-                results: localRecipes.map(formatLocalRecipe),
-                offset: parseInt(offset),
-                number: parseInt(number),
-                totalResults: localTotal
+                results: paginatedLocal.map(formatLocalRecipe),
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalResults: localTotal,
+                totalPages: Math.ceil(localTotal / parseInt(limit))
             });
         }
 
@@ -88,6 +95,9 @@ export const searchRecipes = async (req, res) => {
             title: recipe.title,
             image: recipe.image,
             imageType: 'jpg',
+            readyInMinutes: recipe.readyInMinutes,
+            cuisines: recipe.cuisines || [],
+            dishTypes: recipe.dishTypes || [],
             nutrition: {
                 nutrients: [
                     { name: "Calories", amount: recipe.nutrition.calories, unit: "kcal" },
@@ -105,13 +115,97 @@ export const searchRecipes = async (req, res) => {
             ].filter(Boolean)
         }));
 
-        // 5. Merge Results (Local first, then API)
-        const mergedResults = [...formattedLocalRecipes, ...apiData.results];
+        // Filter API results locally based on diet
+        let apiResults = apiData.results || [];
+        if (diet) {
+            apiResults = apiResults.filter(recipe => {
+                if (diet === 'Vegetarian') return recipe.vegetarian;
+                if (diet === 'Vegan') return recipe.vegan;
+                return true;
+            });
+        }
+
+        // 5. Merge ALL results (Local first, then Filtered API)
+        const allResults = [...formattedLocalRecipes, ...apiResults];
+
+        // 5.5. Apply custom backend filtering (not passed to Spoonacular)
+        let filteredResults = allResults;
+
+        // Filter by cuisine
+        if (cuisine) {
+            filteredResults = filteredResults.filter(recipe => {
+                const recipeCuisines = recipe.cuisines || [];
+                return recipeCuisines.some(c =>
+                    c.toLowerCase().includes(cuisine.toLowerCase())
+                );
+            });
+        }
+
+        // Filter by dish type (e.g., main course, dessert, appetizer)
+        if (type) {
+            filteredResults = filteredResults.filter(recipe => {
+                const recipeDishTypes = recipe.dishTypes || [];
+                return recipeDishTypes.some(dt =>
+                    dt.toLowerCase().includes(type.toLowerCase())
+                );
+            });
+        }
+
+        // Filter by max cooking time
+        if (maxReadyTime) {
+            filteredResults = filteredResults.filter(recipe => {
+                return recipe.readyInMinutes && recipe.readyInMinutes <= parseInt(maxReadyTime);
+            });
+        }
+
+        // 5.6. Apply sorting (after filtering, before pagination)
+        if (sortBy) {
+            switch (sortBy) {
+                case 'name-asc':
+                    filteredResults.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'name-desc':
+                    filteredResults.sort((a, b) => b.title.localeCompare(a.title));
+                    break;
+                case 'time-asc':
+                    filteredResults.sort((a, b) => (a.readyInMinutes || 0) - (b.readyInMinutes || 0));
+                    break;
+                case 'time-desc':
+                    filteredResults.sort((a, b) => (b.readyInMinutes || 0) - (a.readyInMinutes || 0));
+                    break;
+                case 'calories-asc':
+                    filteredResults.sort((a, b) => {
+                        const caloriesA = a.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount || 0;
+                        const caloriesB = b.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount || 0;
+                        return caloriesA - caloriesB;
+                    });
+                    break;
+                case 'calories-desc':
+                    filteredResults.sort((a, b) => {
+                        const caloriesA = a.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount || 0;
+                        const caloriesB = b.nutrition?.nutrients?.find(n => n.name === 'Calories')?.amount || 0;
+                        return caloriesB - caloriesA;
+                    });
+                    break;
+                default:
+                    // No sorting or invalid sortBy value
+                    break;
+            }
+        }
+
+        const totalResults = filteredResults.length;
+
+        // 6. Paginate in backend
+        const startIndex = (parseInt(page) - 1) * parseInt(limit);
+        const endIndex = startIndex + parseInt(limit);
+        const paginatedResults = filteredResults.slice(startIndex, endIndex);
 
         res.json({
-            ...apiData,
-            results: mergedResults,
-            totalResults: apiData.totalResults + localTotal
+            results: paginatedResults,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            totalResults: totalResults,
+            totalPages: Math.ceil(totalResults / parseInt(limit))
         });
 
     } catch (err) {
@@ -271,16 +365,51 @@ export const getRandomRecipes = async (req, res) => {
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-            const errorData = await response.json();
-            console.error('[SPOONACULAR_ERROR]', errorData);
-            return res.status(response.status).json({ msg: 'Error fetching random recipes', error: errorData });
+            console.warn(`[SPOONACULAR_API_FAIL] Status: ${response.status}. Falling back to local recipes.`);
+
+            // Fallback to local recipes
+            const limit = parseInt(number) || 1;
+            const pipeline = [];
+
+            // Match tags if provided (assuming tags map to dishTypes or cuisines)
+            if (tags) {
+                const tagList = tags.split(',').map(t => t.trim().toLowerCase());
+                pipeline.push({
+                    $match: {
+                        $or: [
+                            { dishTypes: { $in: tagList } },
+                            { cuisines: { $in: tagList } }
+                        ]
+                    }
+                });
+            }
+
+            // Random sample
+            pipeline.push({ $sample: { size: limit } });
+
+            const localRecipes = await Recipe.aggregate(pipeline);
+
+            // Format local recipes to match Spoonacular structure partially if needed
+            // The frontend likely expects { recipes: [...] }
+            return res.json({
+                recipes: localRecipes,
+                source: 'local_fallback'
+            });
         }
 
         const data = await response.json();
         res.json(data);
     } catch (err) {
         console.error('[GET_RANDOM_RECIPES_ERROR]', err);
-        res.status(500).json({ msg: 'Server error fetching random recipes' });
+        // Even on server error, try to return local recipes as last resort
+        try {
+            const limit = parseInt(req.query.number) || 1;
+            const localRecipes = await Recipe.aggregate([{ $sample: { size: limit } }]);
+            return res.json({ recipes: localRecipes, source: 'local_fallback_error' });
+        } catch (dbErr) {
+            console.error('[LOCAL_FALLBACK_ERROR]', dbErr);
+            res.status(500).json({ msg: 'Server error fetching random recipes' });
+        }
     }
 };
 
