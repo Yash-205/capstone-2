@@ -1,132 +1,92 @@
-# 🥗 NutriPlate
+# 🥗 NutriPlate: AI-Powered Nutrition & Recipe Engine
 
-**Smart Recipe & Nutrition Management System**
+**NutriPlate** is a state-of-the-art web platform that revolutionizes meal planning through Generative AI. By merging biometric data analysis with advanced LLMs, it provides hyper-personalized nutritional strategies, smart recipe discovery, and comprehensive health tracking.
 
-> **Status**: 🚧 In Development / Midway
-
-**NutriPlate** is a smart web platform designed to help users discover, save, and manage recipes while tracking nutrition. It combines recipe discovery, calorie tracking, ingredient substitution, and plating suggestions to help users make smarter, healthier eating decisions.
-
-## 🌐 Live Demo
-
-| Component               | URL             |
-| ----------------------- | --------------- |
-| 🖥️ Frontend (Next.js) | [Live Demo](https://recipe-finder-orpin-pi.vercel.app/)   |
-| ⚙️ Backend (API)      | [API Link](https://capstone-2-3-hmts.onrender.com)   |
-| 🗄️ Database (MongoDB) | [MongoDB Atlas](#) |
+> [!NOTE]
+> This project is designed to demonstrate high-level proficiency in **GenAI integration**, **Modern Full-Stack Architecture**, and **Premium UX Design**.
 
 ---
 
-## 🚀 Problem Statement
+## 🧠 GenAI & Intelligence Layer
 
-Many people struggle to maintain balanced diets due to time limits and lack of personalized meal plans. Most recipe apps focus only on food ideas, not fitness goals.
+The core of NutriPlate is its intelligence engine, which transforms raw user data into actionable health insights.
 
-**NutriPlate** solves this by providing a unified solution for:
+- **LLM Engine:** Powered by **Llama-3.3-70b-versatile** via the **Groq SDK**, delivering ultra-low latency responses for complex nutritional reasoning.
+- **Structured Intelligence:** Utilizes **Strict JSON Mode** for AI outputs, ensuring seamless integration between the LLM and the application's backend logic.
+- **Personalization Algorithm:** Implements the **Mifflin-St Jeor Equation** to calculate BMR and TDEE, which are then used as context for AI-driven meal recommendations.
+- **Prompt Engineering:** Sophisticated system prompting that manages dietary restrictions, allergies, and caloric targets to generate safe and goal-aligned meal plans.
 
-* **Smart Recipe Discovery**: Finding recipes that match your health goals.
-* **Nutrition Tracking**: Monitoring calories and macros effortlessly.
-* **Personalization**: Tailoring suggestions to your dietary preferences.
+---
 
-## 🏗️ System Architecture
+## 🛠️ In-Depth Tech Stack
 
-The application follows a modern **Client-Server** architecture:
+### Frontend: The Presentation Layer
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router) for optimized rendering and SEO.
+- **Core:** [React 19](https://react.dev/) utilizing the latest concurrent features and hooks.
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) for a utility-first, high-performance design system.
+- **Animations:** [Framer Motion](https://www.framer.com/motion/) & [Lottie-React](https://github.com/LottieFiles/lottie-react) for premium micro-interactions and fluid transitions.
+- **State Management:** React Context API & [NextAuth.js](https://next-auth.js.org/) for robust session handling.
 
-**Frontend → Backend (API) → Database**
+### Backend: The Logic Layer
+- **Runtime:** [Node.js](https://nodejs.org/) with **ES Modules** support.
+- **Framework:** [Express 5](https://expressjs.com/) (Beta) for streamlined middleware handling and RESTful API design.
+- **AI SDK:** [Groq SDK](https://github.com/groq/groq-typescript) for high-speed inference.
+- **Security:** [JWT](https://jwt.io/) (JSON Web Tokens) for stateless authentication and **bcryptjs** for advanced password hashing.
+- **File Management:** [Cloudinary SDK](https://cloudinary.com/documentation/node_integration) for automated image optimization and storage.
 
-* **Frontend**: Next.js (App Router), Tailwind CSS
-* **Backend**: Node.js + Express
-* **Database**: MongoDB (NoSQL)
-* **Authentication**: JWT-based login/signup
-* **Hosting**: Vercel (Frontend), Render (Backend), MongoDB Atlas (Database)
+### Database: The Persistence Layer
+- **Primary DB:** [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (NoSQL) for flexible, document-based data modeling.
+- **ODM:** [Mongoose 8](https://mongoosejs.com/) for schema validation and advanced querying.
+
+---
 
 ## ✨ Key Features
 
-| Category                     | Features                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------- |
-| 🔐**Authentication**   | User registration, login, logout, and role-based access.                  |
-| 🍲**Recipe Finder**    | Browse and search for recipes (Integration with Spoonacular API planned). |
-| ❤️**Favorites**      | Save and manage preferred recipes for quick access.                       |
-| 🛒**Shopping List**    | Add ingredients directly from recipes to your personal shopping list.     |
-| 🥗**Calorie Tracking** | Track calories and nutritional information per recipe.                    |
-| 💬**Community**        | Comment on recipes and share tips.                                        |
-| 🔍**Advanced Search**  | Searching, sorting, and filtering based on dietary goals.                 |
-
-## 🧠 Tech Stack
-
-| Layer                      | Technologies                                |
-| -------------------------- | ------------------------------------------- |
-| **Frontend**         | Next.js 15, React 19, Tailwind CSS 4, Axios |
-| **Backend**          | Node.js, Express.js                         |
-| **Database**         | MongoDB, Mongoose                           |
-| **Authentication**   | JWT (JSON Web Tokens)                       |
-| **AI/External APIs** | OpenAI, Spoonacular (Planned)               |
-
-## 🔗 API Overview
-
-| Endpoint               | Method   | Description                      | Access        |
-| ---------------------- | -------- | -------------------------------- | ------------- |
-| `/api/auth/signup`   | POST     | Register a new user              | Public        |
-| `/api/auth/login`    | POST     | Authenticate user & return JWT   | Public        |
-| `/api/recipes`       | GET      | Get recipes based on goals       | Authenticated |
-| `/api/favorites`     | GET/POST | Manage favorite recipes          | Authenticated |
-| `/api/shopping-list` | GET/POST | Manage shopping list items       | Authenticated |
-| `/api/comments`      | POST     | Submit a new comment on a recipe | Authenticated |
-| `/api/users/:id`     | PUT      | Update user profile & goals      | Authenticated |
+| Feature | Description | Tech Used |
+| :--- | :--- | :--- |
+| **AI Meal Planner** | Generates daily/weekly meal plans based on macros. | Llama 3.3, Groq |
+| **Smart Macro Calc** | Dynamic BMR/TDEE calculation from user profile. | JavaScript Logic |
+| **Recipe Discovery** | Search and filter recipes based on specific health goals. | MongoDB Aggregations |
+| **Premium Auth** | Secure login/signup with role-based access control. | NextAuth.js, JWT |
+| **Media Engine** | Seamless image uploads for custom user recipes. | Cloudinary, Multer |
+| **Motion UI** | A fully animated, glassmorphic user interface. | Framer Motion, Tailwind 4 |
 
 ---
 
-## ⚙️ Local Setup Guide
+## 🚀 Getting Started
 
-Follow these steps to run **NutriPlate** locally.
+### Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas Account
+- Groq API Key
+- Cloudinary Account
 
-### 1️⃣ Clone the Repository
+### Installation
 
-```bash
-git clone https://github.com/yourusername/capstone-2.git
-cd capstone-2
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/capstone-2.git
+   cd capstone-2
+   ```
 
-### 2️⃣ Backend Setup
+2. **Backend Setup:**
+   ```bash
+   cd Backend
+   npm install
+   # Create .env with MONGODB_URI, JWT_SECRET, GROQ_API_KEY, CLOUDINARY_URL
+   npm run dev
+   ```
 
-Navigate to the backend directory and install dependencies:
+3. **Frontend Setup:**
+   ```bash
+   cd ..
+   npm install
+   # Create .env.local with NEXT_PUBLIC_API_URL
+   npm run dev
+   ```
 
-```bash
-cd Backend
-npm install
-```
+---
 
-Create a `.env` file in the `Backend` directory:
+## 📄 License
 
-```env
-PORT=8000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-```
-
-Start the backend server:
-
-```bash
-npm run dev
-```
-
-### 3️⃣ Frontend Setup
-
-Open a new terminal, navigate to the root directory, and install dependencies:
-
-```bash
-# Ensure you are in the root directory 'capstone-2'
-npm install
-```
-
-Create a `.env.local` file in the root directory:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-Start the frontend development server:
-
-```bash
-npm run dev
-```
-
-*The app will run on http://localhost:3000*
+This project is developed as part of a Capstone initiative. All rights reserved.
