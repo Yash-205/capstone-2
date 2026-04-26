@@ -22,13 +22,14 @@ const app = express();
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    
+
     const allowedPatterns = [
       /^https:\/\/recipe-finder-.*\.vercel\.app$/,
       /^https:\/\/recipe-finder.*\.vercel\.app$/,
       /^https:\/\/fitplate-.*\.vercel\.app$/,
       /^https:\/\/fitplate.*\.vercel\.app$/,
-      /localhost/
+      /localhost:\d+$/,
+      /127\.0\.0\.1:\d+$/
     ];
 
     const isAllowed = allowedPatterns.some(pattern => pattern.test(origin));
