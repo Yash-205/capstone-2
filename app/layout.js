@@ -6,7 +6,7 @@ import ProfileRedirect from "./components/ProfileRedirect";
 import { AuthProvider } from "./context/AuthContext";
 
 export const metadata = {
-  title: "Recipe Finder",
+  title: "FitPlate",
   description: "Your personal nutrition and recipe guide",
 };
 

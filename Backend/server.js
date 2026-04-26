@@ -21,17 +21,26 @@ const app = express();
 // // Dynamic CORS origin matching
 const corsOptions = {
   origin: function (origin, callback) {
-    if (
-      !origin || // allow mobile/postman
-      origin.includes('localhost') ||
-      origin.startsWith('https://recipe-finder') // matches all recipe-finder Vercel preview URLs
-    ) {
+    if (!origin) return callback(null, true);
+    
+    const allowedPatterns = [
+      /^https:\/\/recipe-finder-.*\.vercel\.app$/,
+      /^https:\/\/recipe-finder.*\.vercel\.app$/,
+      /^https:\/\/fitplate-.*\.vercel\.app$/,
+      /^https:\/\/fitplate.*\.vercel\.app$/,
+      /localhost/
+    ];
+
+    const isAllowed = allowedPatterns.some(pattern => pattern.test(origin));
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS: ' + origin));
     }
   },
   credentials: true,
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));

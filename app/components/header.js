@@ -45,7 +45,7 @@ const Header = () => {
             href="/"
             className="text-xl md:text-3xl font-bold tracking-widest text-white hover:text-[#d4af37] transition-colors duration-300 font-serif"
           >
-            RECIPE FINDER
+            FITPLATE
           </Link>
 
           {/* Desktop Nav */}
@@ -116,7 +116,7 @@ const Header = () => {
               onClick={() => setIsOpen(false)}
               className="text-2xl font-bold tracking-widest text-white font-serif"
             >
-              RECIPE FINDER
+              FITPLATE
             </Link>
             <div className="h-[2px] w-12 bg-[#d4af37] mt-4"></div>
           </div>

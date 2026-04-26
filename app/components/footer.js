@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="bg-[#050505] text-gray-300 py-12 border-t border-white/10">
     <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-12 px-6 text-sm">
       <div className="space-y-4">
-        <h4 className="font-serif text-xl tracking-widest text-[#d4af37]">RECIPE FINDER</h4>
+        <h4 className="font-serif text-xl tracking-widest text-[#d4af37]">FITPLATE</h4>
         <p className="leading-relaxed font-light text-gray-400">Explore culinary traditions, discover healthy meals, and cook like a pro with our curated collection.</p>
       </div>
 
@@ -36,7 +36,7 @@ const Footer = () => {
       </div>
     </div>
     <div className="text-center text-xs mt-12 text-gray-600 uppercase tracking-widest">
-      &copy; 2025 NutriPlated. All rights reserved.
+      &copy; 2025 FitPlate. All rights reserved.
     </div>
   </footer>
 

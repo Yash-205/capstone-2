@@ -1,6 +1,6 @@
-# 🥗 NutriPlate: AI-Powered Nutrition & Recipe Engine
+# 🥗 FitPlate: AI-Powered Nutrition & Recipe Engine
 
-**NutriPlate** is a state-of-the-art web platform that revolutionizes meal planning through Generative AI. By merging biometric data analysis with advanced LLMs, it provides hyper-personalized nutritional strategies, smart recipe discovery, and comprehensive health tracking.
+**FitPlate** is a state-of-the-art web platform that revolutionizes meal planning through Generative AI. By merging biometric data analysis with advanced LLMs, it provides hyper-personalized nutritional strategies, smart recipe discovery, and comprehensive health tracking.
 
 > [!NOTE]
 > This project is designed to demonstrate high-level proficiency in **GenAI integration**, **Modern Full-Stack Architecture**, and **Premium UX Design**.
@@ -9,7 +9,7 @@
 
 ## 🧠 GenAI & Intelligence Layer
 
-The core of NutriPlate is its intelligence engine, which transforms raw user data into actionable health insights.
+The core of FitPlate is its intelligence engine, which transforms raw user data into actionable health insights.
 
 - **LLM Engine:** Powered by **Llama-3.3-70b-versatile** via the **Groq SDK**, delivering ultra-low latency responses for complex nutritional reasoning.
 - **Structured Intelligence:** Utilizes **Strict JSON Mode** for AI outputs, ensuring seamless integration between the LLM and the application's backend logic.
